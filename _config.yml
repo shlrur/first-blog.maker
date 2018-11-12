@@ -88,4 +88,15 @@ exclude:
   - /docs # ignore Basically Basic sample site
   - /example # ignore Basically Basic dev site
 
+# for Travis CI. (shit custom gem api...)
 destination: ./output
+
+production_url: https://shlrur.github.io/
+source_url: https://github.com/shlrur/first-blog.maker
+
+safe: False
+lsi: False
+
+username: shlrur
+repo: first-blog.maker
+branch: master

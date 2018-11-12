@@ -1,0 +1,27 @@
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+- 2.4.2
+
+install:
+  # Install Jekyll and dependencies
+  - bundle install
+
+before_script:
+  - git config --global user.email "shlrur123@gmail.com"
+  - git config --global user.name "shlrur"
+
+script: bundle exec rake site:deploy --quiet #--trace
+
+# Generate your secure token with the travis gem:
+# get Github token from your Travis CI profile page
+# gem install travis
+# GH_TOKEN from https://github.com/settings/tokens
+# travis encrypt 'GIT_NAME="YOUR_USERNAME" GIT_EMAIL="YOUR_EMAIL" GH_TOKEN=YOUR_TOKEN'
+env:
+  global:
+    secure: "bFYcI8k6Nc6sUrc6Xlvn+l+9FxWWouLKV7yrVUokFDbcLVfMb4r6NB3V0910Z6GS4AndAZwrMCf5aoVI1tJSIOQ757wKDqiZFGLz8pNGsfRod+eJ/7tQN624ifMipm+hxUa0hR0dgGZeZL+v61d8iUjFI5OAWO3acHkredRzfqu3dB7M1y04ddWgvle3I/g+bf0kAgMXhk2fps4y0jlSRQHJ1tTcp95nol1QBA8ohm7E5Nugw4y+vubTA52SoB7vyFfOzsYGBLqebhuP9mStHInMLfyix/0g/WcmXmzLXpI8OBy7C4jUVjHabFwSchBaYVe7M7c+w+lrn7I5HQBpqxmd+YJ9fBV638FInz++dQ6Ysd2oOhyLl94cjf1wTKbYAjOQJfVGs2h3gukrqfCun8nTLc9skomQICV6JkXzkGnEnL4rzDRaz7/JuAPHx+wFsYvufz7oaHromzqtBGwCttKpk0iYTzkCzyVbnQsBn7W91NFU1XoTAUh6ddSzS/xzssH4Hqj65x0/418LC8rL9+Po8xVMYpMH+rPavIiRHIrxnHBAUFG0qKT5E1G/sZCH2+8JiozXBLJfglewXI5AGwSzNFZ2Edagp18EZJO/aTxCOZ6/pnNQ6kuJBvz+rDjaOT3G4k6+96SxGCOrWqVXRnihvr8XfVuze43PI43B1N8="
+branches:
+  only:
+    - master

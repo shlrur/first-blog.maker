@@ -35,7 +35,7 @@ UI에서 어떤 list를 보여주기 위해서 스크롤을 사용할 때, 해�
 
 ### shouldComponentUpdate In Action
 
-React에서 화면이 rendering되는데 영향을 주는 요소는 두가지가 있습니다. __**shouldComponentUpdate** 함수가 true를 return__ 하거나 __새로 그려질 elements가 이전의 elements와 같을때__(virtual dom을 통해서 비교합니다) 입니다. 두 요소를 각각 **SCU**와 **vDOMEq**(elements were equivalent의 줄임말)라고 하겠습니다.
+React에서 화면이 rendering되는데 영향을 주는 요소는 두가지가 있습니다. _**shouldComponentUpdate** 함수가 true를 return_ 하거나 __새로 그려질 elements가 이전의 elements와 같을때__(virtual dom을 통해서 비교합니다) 입니다. 두 요소를 각각 **SCU**와 **vDOMEq**(elements were equivalent의 줄임말)라고 하겠습니다.
 
 * SCU===true && vDOMEq===true
   * SCU가 true를 return했지만, 바뀐것이 없기 때문에 re-rendering되지 않습니다.
