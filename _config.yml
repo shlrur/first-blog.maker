@@ -48,6 +48,7 @@ markdown: kramdown
 theme: jekyll-theme-basically-basic
 plugins: # previsously gems
   - jekyll-feed
+  - jekyll-gist
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-paginate-v2
@@ -81,10 +82,7 @@ exclude:
   - node_modules
   - Rakefile
   - README
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
+  - vendor
   - /docs # ignore Basically Basic sample site
   - /example # ignore Basically Basic dev site
 

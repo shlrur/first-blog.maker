@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "jekyll", "~> 3.5"
 gem "jekyll-theme-basically-basic"
+gem "rake"
 
 group :jekyll_plugins do
     gem "jekyll-feed"
@@ -9,4 +10,5 @@ group :jekyll_plugins do
     gem "jekyll-sitemap"
     gem "jekyll-paginate-v2"
     gem "jekyll-algolia"
+    gem "jekyll-gist"
 end
