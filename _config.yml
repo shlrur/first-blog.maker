@@ -27,7 +27,7 @@ twitter_username:
 github_username: shlrur
 instagram_username: dochaebi
 
-logo: "/assets/images/me.jpg"
+logo: "/assets/images/icon_me.jpg"
 
 search: true
 search_full_content: false # true, false (default)
