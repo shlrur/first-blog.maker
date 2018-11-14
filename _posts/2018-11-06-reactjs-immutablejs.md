@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "[React] Immutable.js: Using Immutable Data Structures"
+title:      "[React] Immutable.js: Why Using Immutable Data Structures"
 subtitle:   "DOM operation"
 categories: develog
 tags:       api
@@ -254,9 +254,9 @@ const spreadConfig = {
 (__JSON__ 객체의 __parse__와 __stringify__를 사용해서 deep copy하는 방법도 있지만, 이 방법은 object 내에 function이 value로 있을 경우 function은 복사가 되지 않습니다.)
 이런 경우에 Immutable.js를 사용하면 편하게 작업할 수 있습니다.
 
-## Usages of Immutable.js
+## The subject of the following post.
 
-**Immutable.js**에서 자주 사용되는 API들의 사용법에 대해서 예제와 함께 알아보겠습니다.
+다음 포스트에서는 **Immutable.js**에서 자주 사용되는 API들의 사용법에 대해서 예제와 함께 알아보겠습니다.
 
 
 # References
