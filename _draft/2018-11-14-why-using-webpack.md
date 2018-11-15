@@ -152,7 +152,57 @@ Multi entry point인 경우에는 output의 filename에 [substitution](https://w
 
 ## Loaders
 
+TypeScript라는 언어가 있습니다. JavaScript와 달리 variable에 type을 선언할 수 있는 특징을 가지는 언어입니다. 하지만 이 언어는 browser에서 바로 처리가 불가능합니다. 이렇게, Browser 혹은 webpack에서 처리할 수 없는 source code를 가지는 module을 JavaScript 코드 또는 data URI로서의 inline image 등으로 변환시키는 것이 Loader의 역할입니다. 때문에 module에서 .CSS 파일을 import하는것도 가능합니다 :)
 
+Loader를 사용하는 방법은 3가지가 있습니다.
+
+* Configuration: webpack.config.js 파일에서 명시하는, 추천하는 방식입니다.
+* Inline: <kbd>import</kbd> 구문마다 명시하는 방법입니다.
+* CLI: Shell command에서 지정하는 방식입니다.
+
+이 포스트에서는 Configuration 방식만 알아보도록 하겠습니다. 그 이유는, configuration에 loader의 설정을 명시하는 방법이 loader를 한눈에 보기에 가장 좋고 유지보수에 좋기 때문입니다. 각 loader에 대한 전체적인 overview를 한눈에 볼 수 있는 장점이 있습니다.
+
+### Configuration of Loaders
+
+Webpack configuration에서 loader에 대한 설정을 하기 위해서는 <kbd>module.rules</kbd>를 건드려야 합니다. 아래의 예제 코드를 보겠습니다.
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          },
+          { loader: 'sass-loader' }
+        ]
+      }
+    ]
+  }
+};
+```
+
+Loader는 마지막 ues부터 평가/실행을 시작합니다. 위의 코드를 보면, _sass-loader_ 부터 시작해서 _css-loader_ 그리고 _style-loader_ 로 끝이납니다. 
+
+Loader에 대한 개념을 얉게 훑은 후 example도 봤으니, 이제 Loader의 특징에 대해서 알아보겠습니다.
+
+### Loaders Features
+
+* **Loader는 chain 형식으로 설정될 수 있습니다.** Chain 구조 내에서는 loader들이 연결되어있고, 각 loader의 output은 다음 loader의 input으로 들어갑니다. 마지막 loader는 아마 JavaScript 코드를 출력 할 것입니다.
+* Synchronous 와 Asynchronous 모두 가능합니다.
+* Loader는 **Node.js**에서 실행되므로, Node.js에서 가능한 모든 것을 할 수 있습니다.
+* 각 Loader의 설정은 <kbd>options</kbd> 객체로 구성할 수 있습니다.(<kbd>query</kbd> parameter는 가능하긴 하지만 deprecated 된 방식입니다.)
+* Normal modules can export a loader in addition to the normal main via package.json with the loader field.
+* Plugin은 loader에 더 많은 기능을 제공할 수 있습니다.
+* 로더는 추가의 임의 파일을 내보낼 수 있습니다.
+
+Loader는 전처리 function(즉, loader)을 통해서 JavaScript 생태계에 활력을 불어넣습니다. 이를 통해서 compression, packaging, 그리고 language translation 같은 fine-grained logic을 유연하게 사용할 수 있습니다.
 
 # References
 
