@@ -66,6 +66,7 @@ Babel을 webpack의 loader로 사용하기 위해서는, webpack과 babel 두 �
 // ./webpack.config.js
 module.exports = {
     module: {
+        entry: ['@babel/polyfill', './src/index.js'],
         rules: [
             {
                 test: /\.(js|jsx)$/,
@@ -79,7 +80,11 @@ module.exports = {
 
 위의 코드는 webpack의 설정파일인 _webpack.config.js_ 입니다. 파일의 위치는 project의 root입니다.
 
-entry, output, plugins등의 설정은 생략하고 loader인 _rules_만 표현했습니다. rules 배열에 babel을 사용하는 설정이 있습니다.
+output, plugins등의 설정은 생략하고 loader인 _rules_과 entry만 표현했습니다.
+
+entry에 _@babel/polyfill_ 이 있습니다. 해당 설정은 아래에서 설명하겠습니다.
+
+그리고 rules 배열에 babel을 사용하는 설정이 있습니다.
 
 *.js 혹은 .jsx 파일을 babel을 사용해서 변환하고, node_modules 폴더는 생략한다*
 
@@ -99,16 +104,36 @@ entry, output, plugins등의 설정은 생략하고 loader인 _rules_만 표현�
 
 위의 코드는 간단합니다. _@babel/preset-env_ 과 _@babel/preset-react_ 를 적용한다는 뜻입니다. 그럼 각각의 preset이 어떤 역할을 하는지 알아보겠습니다.
 
+### @babel/polyfill
+
+ES2015+의 [새로운 기능](https://devhints.io/es6)을 사용할 수 있도록 코드를 바꿔줍니다. 
+
 ### @babel/preset-env
 
 @babel/preset-env은 최신 코드(ES2015 혹은 이상의)를 사용할 때 코드가 실행되는 환경에서 필요한 syntax 변환을 해주는 preset입니다. 한마디로, 현재 브라우저에서 지원하지 않는 어떤 syntax가 발견됐을 때, 해당 syntax를 현재 브라우저에서 지원하는 정도의 syntax로 변환시켜줍니다.
 
-예전에는 babel-preset-stage-0, babel-preset-stage-1, babel-preset-stage-2, babel-preset-stage-3 등을 지원했고, 목적에 맞게 설정해서 사용해야 했지만, 이제는 **@babel/preset-env** 하나면 세세한 설정을 할 필요가 없습니다.
+그럼 어떤 syntax에 대한 처리를 해주는 걸까요? JavaScript는 아직 표준으로 정의되지 않는 proposal spec들이 존재합니다. 예전에는 이 spec들을 stage로 구분해서 babel-preset-stage-0, babel-preset-stage-1, babel-preset-stage-2, babel-preset-stage-3, babel-preset-stage-4를 지원했고, 목적에 맞게 설정해서 사용했었습니다. 하지만 이제는 **@babel/preset-env** 하나면 세세한 설정을 할 필요가 없습니다.
 
 ### @babel/preset-react
 
-React를 사용하는 project를 위한 preset입니다. 
+React를 사용하는 project를 위한 preset입니다. 해당 preset은 3가지 preset을 가지고있고, 2가지 preset은 development 옵션이 있을때 포함됩니다.
 
+항상 포함하는 preset은 다음과 같습니다.
+
+* _@babel/plugin-syntax-jsx_: JSX의 parsing을 가능하게 해줍니다.
+* _@babel/plugin-transform-react-jsx_: JSX를 react의 함수(_React.createElement()_)를 호출하는 방식으로 전환시켜줍니다.
+* _@babel/plugin-transform-react-display-name_: _createReactClass_ 와 _React.createClass_ 에 displayName을 추가시켜줍니다.
+
+development 옵션일 때 추가되는 preset은 다음과 같습니다.
+
+* _@babel/plugin-transform-react-jsx-self_: JSX element에 **__self** property를 추가합니다. 이는 runtime warning 을 생성하는데 사용됩니다. Development mode에서는 해당 preset을 사용해야 합니다.
+* _@babel/plugin-transform-react-jsx-source_: JSX element에 **__source** property를 추가합니다. 해당 property에는 file name과 line number가 있는데, 이는 warning message를 생성하는데 도움을 줍니다.
+
+---
+
+# Conclusion
+
+해당 post에서는 **babel**을 사용하는 이유에 대해서 알아보고, react를 사용하는 project에서의 babel 설정 방법과 각 설정 항목들이 맡은 역할에 대해서 간략하게 알아봤습니다. Project를 진행함에 따라서 babel의 세세한 설정이 필요한 경우가 있거나, 다른 조사가 필요한 경우 그에 대한 post를 또 작성해보도록 하겠습니다.
 
 ---
 
