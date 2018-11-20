@@ -50,27 +50,64 @@ _TypeScript_ 를 사용하는 프로젝트가 하나의 예가 될 수 있습니
 
 그리고, JavaScript framework중 하나인 **React**를 뼈대로 사용하는 project가 하나의 예가 될 수 있습니다. React는 **JSX**를 사용해서 script에서 **view**를 구현합니다. (**Angular**역시 script에서 view를 구현할 수 있지만 **.html** 파일로도 view를 구현할 수 있는것과 비교하면 특이한 방식이라고 볼 수 있습니다.) JSX는 ~~당연히~~ 현재 browser에서 바로 인식하지 못하기 때문에 babel의 기능이 필요하게 됩니다.
 
+---
+
 # How to Use Babel
 
 이번 포스트에서는 frontend, 더 특정하자면 react에서 babel을 사용하는 방법에 대해서 이야기 해보려고 합니다. 이 포스트를 작성하는 이유가 react를 사용한 프로젝트의 공부를 하기 위해서이기 때문입니다. 각설하고, CLI tool이 아닌 Configuration에 의한 사용법에 대해서 알아보도록 하겠습니다.
 
-## Configure Babel
+Webpack의 loader로서 Babel을 이용할때는 **File-relative** 방식의 config를 사용할 수 있습니다. Project-wide 방식도 있지만, 여기서는 File-relative 방식만을 다루도록 하겠습니다.
 
-Babel의 config 파일은 2가지 종류가 있습니다.
+## Config in React
 
-**Project-wide** VS **File-relative**
+Babel을 webpack의 loader로 사용하기 위해서는, webpack과 babel 두 군데의 설정을 해줘야 합니다.
 
-Vs라고 표현했지만 반대되는 개념은 아닙니다. 각각 사용할수도 있고, 같이 사용할수도 있습니다.
+```js
+// ./webpack.config.js
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: ['babel-loader']
+            }
+        ]
+    }
+};
+```
 
-### Project-wide configuration
+위의 코드는 webpack의 설정파일인 _webpack.config.js_ 입니다. 파일의 위치는 project의 root입니다.
 
-Babel 7.x 부터, Babel은 현재 작업중인 디렉토리를 뜻하는 **root** 디렉토리 라는 개념을 사용하기 시작했습니다. 그리고, 현재 작업중인 프로젝트의 root 디렉토리에서 "babel.config.js"라는 파일을 자동으로 검색합니다. 
+entry, output, plugins등의 설정은 생략하고 loader인 _rules_만 표현했습니다. rules 배열에 babel을 사용하는 설정이 있습니다.
 
+*.js 혹은 .jsx 파일을 babel을 사용해서 변환하고, node_modules 폴더는 생략한다*
 
+라는 뜻입니다.
 
+```js
+// ./.babelrc
+{
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ]
+}
+```
 
-## With React
+위의 코드는 babel에 대한 설정을 하는 _.babelrc_ 파일입니다. 역시 project의 root에 있습니다.
 
+위의 코드는 간단합니다. _@babel/preset-env_ 과 _@babel/preset-react_ 를 적용한다는 뜻입니다. 그럼 각각의 preset이 어떤 역할을 하는지 알아보겠습니다.
+
+### @babel/preset-env
+
+@babel/preset-env은 최신 코드(ES2015 혹은 이상의)를 사용할 때 코드가 실행되는 환경에서 필요한 syntax 변환을 해주는 preset입니다. 한마디로, 현재 브라우저에서 지원하지 않는 어떤 syntax가 발견됐을 때, 해당 syntax를 현재 브라우저에서 지원하는 정도의 syntax로 변환시켜줍니다.
+
+예전에는 babel-preset-stage-0, babel-preset-stage-1, babel-preset-stage-2, babel-preset-stage-3 등을 지원했고, 목적에 맞게 설정해서 사용해야 했지만, 이제는 **@babel/preset-env** 하나면 세세한 설정을 할 필요가 없습니다.
+
+### @babel/preset-react
+
+React를 사용하는 project를 위한 preset입니다. 
 
 
 ---
