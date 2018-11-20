@@ -23,7 +23,7 @@ webpack에 대해서는 [Why using webpack]({{ site.url }}{{ site.baseurl }}/dev
 
 Babel은 주로 현재 및 이전 브라우저 또는 환경에서 ECMAScript 2015+ 코드를 이전 버전과 호환되는 JavaScript 버전으로 변환하는 데 사용되는 [툴체인](https://ko.wikipedia.org/wiki/%ED%88%B4%EC%B2%B4%EC%9D%B8)입니다.
 
-Babel이 하는일을 간단히 나열해보자면,
+Babel이 하는 일을 간단히 나열해보자면,
 
 * syntax를 버전 또는 환경에 알맞게 바꾸고
 * Target 환경에서 지원하지 않는 기능에 대한 [polyfill](https://en.wikipedia.org/wiki/Polyfill_(programming))을 수행(@babel/polyfill을 통해서)
@@ -42,21 +42,21 @@ Babel이 하는일을 간단히 나열해보자면,
 });
 ```
 
-혹시 어디서 들어본 것 같은 기능인가요? 그렇습니다. [Webpack의 Loaders]({{ site.url }}{{ site.baseurl }}/develog/2018/11/14/why-using-webpack/#loaders)가 하는일이 바로 babel이 하는 일과 같습니다. 그래서, **webpack을 bundler로 사용하는 project에서 babel을 사용해야 할 때는 webpack의 loader에서 babel을 사용하면 됩니다.**
+혹시 어디서 들어본 것 같은 기능인가요? 그렇습니다. [Webpack의 Loaders]({{ site.url }}{{ site.baseurl }}/develog/2018/11/14/why-using-webpack/#loaders)가 하는 일이 바로 babel이 하는 일과 같습니다. 그래서, **webpack을 bundler로 사용하는 project에서 babel을 사용해야 할 때는 webpack의 loader에서 babel을 사용하면 됩니다.**
 
-그렇다면 babel을 사용해야 하는 project는 어떤것이 있을까요?
+그렇다면 babel을 사용해야 하는 project는 어떤 것이 있을까요?
 
 _TypeScript_ 를 사용하는 프로젝트가 하나의 예가 될 수 있습니다. TypeScript의 syntax는 browser가 이해할 수 없기 때문에 소스코드를 변환시켜야 합니다.
 
-그리고, JavaScript framework중 하나인 **React**를 뼈대로 사용하는 project가 하나의 예가 될 수 있습니다. React는 **JSX**를 사용해서 script에서 **view**를 구현합니다. (**Angular**역시 script에서 view를 구현할 수 있지만 **.html** 파일로도 view를 구현할 수 있는것과 비교하면 특이한 방식이라고 볼 수 있습니다.) JSX는 ~~당연히~~ 현재 browser에서 바로 인식하지 못하기 때문에 babel의 기능이 필요하게 됩니다.
+그리고, JavaScript framework 중 하나인 **React**를 뼈대로 사용하는 project가 하나의 예가 될 수 있습니다. React는 **JSX**를 사용해서 script에서 **view**를 구현합니다. (**Angular**역시 script에서 view를 구현할 수 있지만 **.html** 파일로도 view를 구현할 수 있는 것과 비교하면 특이한 방식이라고 볼 수 있습니다.) JSX는 ~~당연히~~ 현재 browser에서 바로 인식하지 못하기 때문에 babel의 기능이 필요하게 됩니다.
 
 ---
 
 # How to Use Babel
 
-이번 포스트에서는 frontend, 더 특정하자면 react에서 babel을 사용하는 방법에 대해서 이야기 해보려고 합니다. 이 포스트를 작성하는 이유가 react를 사용한 프로젝트의 공부를 하기 위해서이기 때문입니다. 각설하고, CLI tool이 아닌 Configuration에 의한 사용법에 대해서 알아보도록 하겠습니다.
+이번 포스트에서는 frontend, 더 특정하자면 react에서 babel을 사용하는 방법에 대해서 이야기해 보려고 합니다. 이 포스트를 작성하는 이유가 react를 사용한 프로젝트의 공부를 하기 위해서이기 때문입니다. 각설하고, CLI tool이 아닌 Configuration에 의한 사용법에 대해서 알아보도록 하겠습니다.
 
-Webpack의 loader로서 Babel을 이용할때는 **File-relative** 방식의 config를 사용할 수 있습니다. Project-wide 방식도 있지만, 여기서는 File-relative 방식만을 다루도록 하겠습니다.
+Webpack의 loader로서 Babel을 이용할 때는 **File-relative** 방식의 config를 사용할 수 있습니다. Project-wide 방식도 있지만, 여기서는 File-relative 방식만을 다루도록 하겠습니다.
 
 ## Config in React
 
@@ -78,9 +78,9 @@ module.exports = {
 };
 ```
 
-위의 코드는 webpack의 설정파일인 _webpack.config.js_ 입니다. 파일의 위치는 project의 root입니다.
+위의 코드는 webpack의 설정 파일인 _webpack.config.js_ 입니다. 파일의 위치는 project의 root입니다.
 
-output, plugins등의 설정은 생략하고 loader인 _rules_과 entry만 표현했습니다.
+output, plugins 등의 설정은 생략하고 loader인 _rules_과 entry만 표현했습니다.
 
 entry에 _@babel/polyfill_ 이 있습니다. 해당 설정은 아래에서 설명하겠습니다.
 
@@ -116,18 +116,18 @@ ES2015+의 [새로운 기능](https://devhints.io/es6)을 사용할 수 있도�
 
 ### @babel/preset-react
 
-React를 사용하는 project를 위한 preset입니다. 해당 preset은 3가지 preset을 가지고있고, 2가지 preset은 development 옵션이 있을때 포함됩니다.
+React를 사용하는 project를 위한 preset입니다. 해당 preset은 3가지 preset을 가지고 있고, 2가지 preset은 development 옵션이 있을 때 포함됩니다.
 
 항상 포함하는 preset은 다음과 같습니다.
 
 * _@babel/plugin-syntax-jsx_: JSX의 parsing을 가능하게 해줍니다.
-* _@babel/plugin-transform-react-jsx_: JSX를 react의 함수(_React.createElement()_)를 호출하는 방식으로 전환시켜줍니다.
+* _@babel/plugin-transform-react-jsx_: JSX를 react의 함수(_React.createElement()_)를 호출하는 방식으로 전환해줍니다.
 * _@babel/plugin-transform-react-display-name_: _createReactClass_ 와 _React.createClass_ 에 displayName을 추가시켜줍니다.
 
 development 옵션일 때 추가되는 preset은 다음과 같습니다.
 
-* _@babel/plugin-transform-react-jsx-self_: JSX element에 **__self** property를 추가합니다. 이는 runtime warning 을 생성하는데 사용됩니다. Development mode에서는 해당 preset을 사용해야 합니다.
-* _@babel/plugin-transform-react-jsx-source_: JSX element에 **__source** property를 추가합니다. 해당 property에는 file name과 line number가 있는데, 이는 warning message를 생성하는데 도움을 줍니다.
+* _@babel/plugin-transform-react-jsx-self_: JSX element에 **__self** property를 추가합니다. 이는 runtime warning 을 생성하는 데 사용됩니다. Development mode에서는 해당 preset을 사용해야 합니다.
+* _@babel/plugin-transform-react-jsx-source_: JSX element에 **__source** property를 추가합니다. 해당 property에는 file name과 line number가 있는데, 이는 warning message를 생성하는 데 도움을 줍니다.
 
 ---
 
