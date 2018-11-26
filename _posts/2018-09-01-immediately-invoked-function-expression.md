@@ -7,9 +7,9 @@ tags:       javascript
 comments:   true
 ---
 
->이 포스트는 [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) 의 글을 번역한 것입니다.
-
 잘 모르시겠지만, 저는 용어 사용에 있어서 까다로운 편입니다. 그래서 유명하지만 오해의 소지가 있는 JavaScript 용어인 "self-executing anonymous function" (혹은 self-invoked anonymous function) 을 매우 자주 접한 후, 제 생각을 article에 정리해야겠다고 생각했습니다.
+
+>이 포스트는 [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) 의 글을 번역한 것입니다.
 
 이 패턴이 실제로 어떻게 작용하는지에 대해 철저한 정보를 제공할 뿐만 아니라, 그것의 이름을 제안하려 합니다. 또한, 되도록 이 포스트의 모든 부분을 읽기를 추천합니다.
 
