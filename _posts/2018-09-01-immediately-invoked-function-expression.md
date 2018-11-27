@@ -204,7 +204,7 @@ _Closure에 대해서 더 알고싶다면, [Closures explained with JavaScript](
 
 _마지막 두 가지 예에서 <kbd>lockedInIndex</kbd>는 아무 문제 없이 <kbd>i</kbd>라고 볼 수 있지만, function arguments로 다른 이름을 가진 식별자를 사용하면 개념을 훨씬 쉽게 설명할 수 있습니다._
 
-IIFE의 가장 유리한 부작용(?) 중 하나는 \<이름이 지정되지 않았거나 익명인 function expression이 식별자를 사용하지 않고 즉시 호출되기 때문에 현재 범위를 오염시키지 않고 closure를 사용할 수 있다\>는 것입니다.
+IIFE의 가장 유리한 부작용(?) 중 하나는 **\<이름이 지정되지 않았거나 익명인 function expression이 식별자를 사용하지 않고 즉시 호출되기 때문에 현재 scope를 오염시키지 않고 closure를 사용할 수 있다\>**는 것입니다.
 
 ### What’s wrong with “Self-executing anonymous function?”
 
