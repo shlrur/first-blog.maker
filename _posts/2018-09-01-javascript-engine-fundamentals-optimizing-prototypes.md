@@ -63,7 +63,7 @@ for (let i = 0; i < 4242424242; ++i) {
 console.log(result);
 ```
 
-V8은 Ignition interpreter에서 bytecode를 실행하기 시작합니다. 어느 시점에 V8은 코드가 hot 하다고 판단하고 TurboFan frontend를 시작합니다. TurboFan frontend는 profiling data를 통합하고 코드의 기본적인 machine representation 체계를 구축하는 TurboFan의 일부입니다. 그런 다음 추가적인 개선을 위해 다른 thread에 있는 TurboFan optimizer로 전송합니다.
+V8은 Ignition interpreter에서 bytecode를 실행하기 시작합니다. 어느 시점에 V8은 코드가 hot 하다고(많이 실행된다고) 판단하고 TurboFan frontend를 시작합니다. TurboFan frontend는 profiling data를 통합하고 코드의 기본적인 machine representation 체계를 구축하는 TurboFan의 일부입니다. 그런 다음 추가적인 개선을 위해 다른 thread에 있는 TurboFan optimizer로 전송합니다.
 
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_optimizing_prototypes/4_pipeline-detail-v8.svg" alt="4">
@@ -79,7 +79,7 @@ SpiderMonkey engine 역시 interpreter에서 bytecode를 실행하기 시작합�
     <figcaption>pipeline detail: SpiderMonkey</figcaption>
 </figure>
 
-한동안 Baseline 코드를 실행하면 SpiderMonkey는 결국 IonMonkey frontend를 실행하고 V8과 매우 유사한 optimizer를 시작합니다. IonMonkey가 최적화하는 동안 Baseline에서 실행됩니다. 마지막으로 optimizer가 완료되면, Baseline 코드 대신 최적화된 코드를 실행합니다.
+한동안 Baseline 코드를 실행하면 SpiderMonkey는 결국 IonMonkey frontend를 실행하고 V8과 매우 유사한 optimizer를 시작합니다. IonMonkey가 최적화하는 동안 프로그램은 Baseline에서 실행됩니다. 마지막으로 optimizer가 작업을 완료하면, Baseline 코드 대신 최적화된 코드(IonMonkey)를 실행합니다.
 
 Chakra의 구조는 SpiderMonkey와 매우 비슷하지만, Chakra는 메인 thread를 막지 않기 위해 더 많은 것들을 동시에 실행하려고 시도합니다. 메인 Thread에서 compiler의 일부를 실행하는 대신, Chakra는 compiler가 필요로 하는 bytecode와 profiling data를 복사하여 전용 compiler 프로세스로 보냅니다.
 
@@ -214,7 +214,7 @@ Bar.prototype.getX = function getX() {
 const foo = new Bar(true);
 ```
 
-위의 코드를 통해서 생성된 instance는 <kbd>'x'</kbd> property 가 들어있는 shape를 가진다. <kbd>foo</kbd>의 prototype인 <kbd>Bar.prototype</kbd>은 <kbd>Bar</kbd> class에 속해있다.
+위의 코드를 통해서 생성된 instance는 <kbd>'x'</kbd> property 가 들어있는 shape를 가집니다. <kbd>foo</kbd>의 prototype인 <kbd>Bar.prototype</kbd>은 <kbd>Bar</kbd> class에 속해있습다.
 
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_optimizing_prototypes/11_class-shape-1.svg" alt="11">
