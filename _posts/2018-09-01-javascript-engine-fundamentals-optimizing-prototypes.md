@@ -264,7 +264,7 @@ const x = $getX.call(foo);
     <figcaption>method load</figcaption>
 </figure>
 
-Engine은 <kbd>foo</kbd> instance에서 시작하고, <kbd>foo</kbd>의 shape에 <kbd>'getX</kbd>' property가 없다는 것을 알아챕니다. 그래서 engine은 prototype chain을 타고 올라간다. <kbd>Bar.prototype</kbd>에 도달하여, prototype의 shape를 봤을 때 offset <kbd>0</kbd>에 <kbd>'getX'</kbd> property가 있는 것을 알 수 있습니다. <kbd>Bar.prototype</kbd>에서 앞서 찾은 offset의 값을 보면 우리가 찾던 <kbd>JSFunction</kbd> <kbd>getX</kbd>를 찾을 수 있습니다.
+Engine은 <kbd>foo</kbd> instance에서 시작하고, <kbd>foo</kbd>의 shape에 <kbd>'getX'</kbd> property가 없다는 것을 알아챕니다. 그래서 engine은 prototype chain을 타고 올라갑니다. <kbd>Bar.prototype</kbd>에 도달하여, prototype의 shape를 봤을 때 offset <kbd>0</kbd>에 <kbd>'getX'</kbd> property가 있는 것을 알 수 있습니다. <kbd>Bar.prototype</kbd>에서 앞서 찾은 offset의 값을 보면 우리가 찾던 <kbd>JSFunction</kbd> <kbd>getX</kbd>를 찾을 수 있습니다.
 
 JavaScript의 유연함(flexibility)덕분에 prototype chain link를 다음과 같이 변형할 수 있습니다.
 
@@ -374,7 +374,7 @@ V8은 이러한 목적을 위해 특별하게 prototype shape를 처리합니다
     <figcaption>inline cache - validity cell</figcaption>
 </figure>
 
-이 코드를 처음 실행하는 동안 inline cache를 워밍업할 때 V8은 해당 property가 발견된 offset, 즉 해당 property가 발견된 prototype(이 예제에서는 <kbd>Bar.prototype</kbd>)과 instance의 모양(여기서는 <kbd>foo</kbd>의 shape)을 기억합니다. 그리고 instance의 shape가 가리키는 _바로위의 prototype_(이 경우 <kbd>Bar.prototype</kbd>)의 ValidityCell을 가리키는 링크도 가지고 있습니다.
+이 코드를 처음 실행하는 동안 inline cache를 워밍업할 때 V8은 해당 property가 발견된 offset, 즉 해당 property가 발견된 prototype(이 예제에서는 <kbd>Bar.prototype</kbd>)과 instance의 shape(여기서는 <kbd>foo</kbd>의 shape)를 기억합니다. 그리고 instance의 shape가 가리키는 _바로위의 prototype_(이 경우 <kbd>Bar.prototype</kbd>)의 ValidityCell을 가리키는 링크도 가지고 있습니다.
 
 다음번에 Inline Cache를 hit하면, 엔진은 instance의 shape와 <kbd>ValidityCell</kbd>을 확인합니다. 아직 valid하다면, 엔진은 <kbd>Prototype</kbd>의 <kbd>offset</kbd>에 직접 접근해서 추가적인 조회를 생략할수 있습니다.
 
@@ -385,7 +385,7 @@ V8은 이러한 목적을 위해 특별하게 prototype shape를 처리합니다
 
 Prototype이 변경되면 새로운 shape가 prototype에 할당되고 기존의 <kbd>ValidityCell</kbd> 무효(invalidated)가 됩니다. 따라서 다음 번 실행시에 Inline Cache는 누락되어서 성능이 저하됩니다.
 
-이전에 살펴봤던 DOM element예제로 돌아가보면, 예제의 <kbd>Object.prototype</kbd>을 변경하는 것은 <kbd>Object.prototype</kbd>의 Inline Cache가 무효화되는것 뿐만 아니라, 아래에 있는 <kbd>EventTarget.prototype</kbd>, <kbd>Node.prototype</kbd>, <kbd>Element.prototype</kbd> 그리고 마지막으로 <kbd>HTMLAnchorElement.prototype</kbd>사이에 있는 prototype 모두 무효화되는 것을 뜻한다.
+이전에 살펴봤던 DOM element예제로 돌아가보면, 예제의 <kbd>Object.prototype</kbd>을 변경하는 것은 <kbd>Object.prototype</kbd>의 Inline Cache가 무효화되는것 뿐만 아니라, 아래에 있는 <kbd>EventTarget.prototype</kbd>, <kbd>Node.prototype</kbd>, <kbd>Element.prototype</kbd> 그리고 마지막으로 <kbd>HTMLAnchorElement.prototype</kbd>사이에 있는 prototype 모두 무효화되는 것을 뜻합니다.
 
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_optimizing_prototypes/20_prototype-chain-validitycells.svg" alt="20">
@@ -415,7 +415,7 @@ Object.prototype.newMethod = y => y;
 
 <kbd>loadX</kbd>에 있는 inline cache는 <kbd>Bar.prototype</kbd>의 <kbd>ValidityCell</kbd>을 가리킵니다. 만약 <kbd>Object.prototype</kbd>(JavaScript의 prototype들 중에서 가장 root에 있음)에 어떤 변형을 주는 작업을 한다면, 그 <kbd>ValidityCell</kbd>은 무효화되고 다음번 실행시에 기존의 Inline Cache가 누락되고 성능이 저하됩니다.
 
-<kbd>Object.prototype</kbd>를 변형시키는 것은 언제나 좋지않은 아이디어입니다. 왜냐하면 엔진이 그 시점까지 prototype 로드하면서 생긴 모든 Inline Cache를 무효화시키기 때문입니다. 다음 코드는 하지 _말아야_ 할 다은 예입니다.
+<kbd>Object.prototype</kbd>를 변형시키는 것은 언제나 좋지않은 아이디어입니다. 왜냐하면 엔진이 그 시점까지 prototype 로드하면서 생긴 모든 Inline Cache를 무효화시키기 때문입니다. 다음 코드는 하지 _말아야_ 할 다른 예입니다.
 
 ```js
 Object.prototype.foo = function() { /* … */ };
@@ -427,9 +427,9 @@ someObject.foo();
 delete Object.prototype.foo;
 ```
 
-위의 코드에서 <kbd>Object.prototype</kbd>를 확장했고, 이는 그 시점까지 엔진이 올려놓은 모든 prototype의 Inline Cache를 무효로 함을 뜻합니다. 그런 다음 새로 만든 prototype method를 사용하는 코드를 실행합니다. 엔진은 처음부터 다시 시작해서, 모든 prototype property에 대한 접근을 위해 새로운 Inline Cache를 만들어야 합니다. 그리고 마지막으로 "스스로 깨끗하게 정리(clean up after ourselves)"하기 위해서 앞서 추가했던 prototye method를 삭제합니다.
+위의 코드에서 <kbd>Object.prototype</kbd>을 확장했고, 이는 그 시점까지 엔진이 올려놓은 모든 prototype의 Inline Cache를 무효로 함을 뜻합니다. 그런 다음 새로 만든 prototype method를 사용하는 코드를 실행합니다. 엔진은 처음부터 다시 시작해서, 모든 prototype property에 대한 접근을 위해 새로운 Inline Cache를 만들어야 합니다. 그리고 마지막으로 "스스로 깨끗하게 정리(clean up after ourselves)"하기 위해서 앞서 추가했던 prototye method를 삭제합니다.
 
-정리란 좋은 아이디어처럼 들립니다. 그렇지 않나요? 글쎄요, 위의 경우에서는 좋지 않은 상황을 더욱 악화시키는 요소로 작용합니다. Property의 삭제는 <kbd>Object.prototype</kbd>의 수정을 뜻하므로 Inline Cache는 모두 다시 무효가 되고 엔진은 다시 처음부터 다시 작업을 해야 합니다.
+정리란 좋은 아이디어처럼 들립니다. 그렇지 않나요? 하지만, 위의 경우에서는 좋지 않은 상황을 더욱 악화시키는 요소로 작용합니다. Property의 삭제는 <kbd>Object.prototype</kbd>의 수정을 뜻하므로 Inline Cache는 모두 다시 무효가 되고 엔진은 다시 처음부터 다시 작업을 해야 합니다.
 
 > **Summary**: Prototype은 object일 뿐이지만 prototype에서 method 검색 성능을 최적화하기 위해 JavaScript 엔진에서 특별하게 처리됩니다. Prototype은 건드리지 마십시오! 또는 prototype을 정말 건드려야 하는 경우, 다른 코드가 실행되기 전에 prototype을 제작하십시오. 그러면 당신의 코드가 실행되는 동안 엔진의 모든 최적화가 무효화되지 않습니다.
 
