@@ -31,7 +31,7 @@ permalink:  /javascripts/javascript-engine-fundamentals-shapes-and-Inline-caches
 
 이제 JavaScript 코드를 실제로 실행하는 pipeline의 부분(즉, 코드가 해석되고 최적화되는 부분)을 파고들어 주요 JavaScript 엔진 간의 차이점 몇 가지를 살펴보겠습니다.
 
-일반적인 경우를 말해보자면, **interpreter**와 **optimazing compiler**가 들어 있는 pipeline이 있습니다. 아래의 그림과 함께 살펴보자. **Interpreter**는 최적화되지 않은 **bytecode**를 빠르게 생성하며, **optimazing compiler**는 시간이 좀 더 걸리지만 결국 고도로 최적화된 머신 코드(**optimized code**)를 생성합니다.
+일반적인 경우를 말해보자면, **interpreter**와 **optimazing compiler**가 들어 있는 pipeline이 있습니다. 아래의 그림과 함께 살펴보겠습니다. **Interpreter**는 최적화되지 않은 **bytecode**를 빠르게 생성하며, **optimazing compiler**는 시간이 좀 더 걸리지만 결국 고도로 최적화된 머신 코드(**optimized code**)를 생성합니다.
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_shape_and_inline_caches/1_interpreter-optimizing-compiler.png" alt="">
     <figcaption>generally speaking compiler</figcaption>
@@ -182,7 +182,7 @@ logX(object2);
 
 여러 개의 object를 사용할 때 장점이 더 명확하게 나타납니다. 얼마나 많은 object가 있든 간에, 같은 shape가 있는 한, shape와 property 정보를 한 번만 저장하면 됩니다.
 
-모든 JavaScript 엔진은 shape을 최적화를 위해서 사용하지만, 모두 그것을 shape이라고 하지는 않습니다.
+모든 JavaScript 엔진은 shape를 최적화에 사용하지만, 모두 그것을 shape이라고 부르지는 않습니다.
 * 학술 논문에서는 이를 _Hidden Classes_ 라고 합니다.(JavaScript class와 혼동)
 * V8은 이러한 _Map_ 이라고 부릅니다.(JavaScript의 Map과 혼동) 
 * Chakra는 이를 _Types_ 라고 합니다.(JavaScript의 dynamic types, typeof와 혼동)
@@ -207,7 +207,7 @@ JavaScript 엔진에서 shape는 transition chain을 형성합니다. 아래의 
     <figcaption>shape chain 1</figcaption>
 </figure>
 
-Object는 아무 property가 없이 시작하기 때문에 빈 shape를 가리킵니다. 다음 명령문으로 object에 값이 <kbd>5</kbd>인 property <kbd>'x'</kbd>를 추가함으로서, JavaScript 엔진이 shape에 <kbd>'x'</kbd> property를 추가하고 <kbd>JSObject</kbd>의 첫 번째 offset인 0에 value <kbd>5</kbd>를 추가합니다. 다음 명령문으로 property <kbd>'y'</kbd>를 추가하면, JavaScript 엔진은 shape를 <kbd>'x'</kbd>, <kbd>'y'</kbd>가 모두 포함도록 변환한다. 그리고 <kbd>JSObject</kbd>에 <kbd>6</kbd>을 추가한다(offset은 <kbd>1</kbd>).
+Object는 아무 property가 없이 시작하기 때문에 빈 shape를 가리킵니다. 다음 명령문으로 object에 값이 <kbd>5</kbd>인 property <kbd>'x'</kbd>를 추가함으로서, JavaScript 엔진이 shape에 <kbd>'x'</kbd> property를 추가하고 <kbd>JSObject</kbd>의 첫 번째 offset인 0에 value <kbd>5</kbd>를 추가합니다. 다음 명령문으로 property <kbd>'y'</kbd>를 추가하면, JavaScript 엔진은 shape를 <kbd>'x'</kbd>, <kbd>'y'</kbd>가 모두 포함도록 변환합니다. 그리고 <kbd>JSObject</kbd>에 <kbd>6</kbd>을 추가합니다(offset은 <kbd>1</kbd>).
 
 >**Note** : property가 추가된 순서는 shape에 영향을 줍니다. 예를 들어, <kbd>{ x: 4, y: 5 }</kbd>의 경우와 <kbd>{ y: 5, x: 4 }</kbd>의 경우는 shape이 달라집니다.
 
@@ -259,7 +259,7 @@ const object2 = { x: 6 };
 
 <kbd>'x'</kbd> property를 포함하는 object literal은 처음부터 <kbd>'x'</kbd>가 포함된 shape에서 시작하여 빈 shape를 효과적으로 사용하지 않습니다. 이러한 방법들을 적어도 V8과 Spider Monkey에서 사용하고 있습니다. 이러한 최적화는 transition chain을 단축하고 literal에서 object를 보다 효율적으로 생성할 수 있도록 합니다.
 
-Benedikt의 blog의 [surprising polymorphism in React applications](https://medium.com/@bmeurer/surprising-polymorphism-in-react-applications-63015b50abc) post는 이러한 세부 요소들이 실제 성능에 어떻게 영향을 미칠 수 있는지를 논의합니다.
+Benedikt blog의 post인 [surprising polymorphism in React applications](https://medium.com/@bmeurer/surprising-polymorphism-in-react-applications-63015b50abc) 는 이러한 세부 요소들이 실제 성능에 어떻게 영향을 미칠 수 있는지에 대해서 이야기합니다.
 
 아래 코드는 <kbd>'x'</kbd>, <kbd>'y'</kbd>, 그리고 <kbd>'z'</kbd> property들을 가지는 3D point object를 나타내고 있습니다.
 
@@ -270,7 +270,7 @@ point.y = 5;
 point.z = 6;
 ```
 
-우리가 배우기로, 이것은 object와 함께 3개의 shape를 메모리에 생성합니다(빈 shape는 개수에 포함하지 않았을 때). 아래의 그림과 같이 <kbd>'x'</kbd> property에 접근하기 위해서 program에서 <kbd>point.x</kbd> 를 입력한다면, JavaScript 엔진은 linked list를 따라갑니다. <kbd>Shape</kbd>의 제일 아래에서 시작해서, <kbd>'x'</kbd>가 포함된 제일 위 <kbd>Shape</kbd>까지 올라갑니다.
+우리가 배우기로, 이것은 object와 함께 3개의 shape를 메모리에 생성합니다(빈 shape는 개수에 포함하지 않겠습니다). 아래의 그림과 같이 <kbd>'x'</kbd> property에 접근하기 위해서 program에서 <kbd>point.x</kbd> 를 입력한다면, JavaScript 엔진은 linked list를 따라갑니다. <kbd>Shape</kbd>의 제일 아래에서 시작해서, <kbd>'x'</kbd>가 포함된 제일 위 <kbd>Shape</kbd>까지 올라갑니다.
 
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_shape_and_inline_caches/16_shapetable-1.png" alt="">
@@ -286,12 +286,12 @@ point.z = 6;
 
 여기서 잠시 살펴보면, 우리는 사전 검색으로 돌아왔습니다... 만 애초에 Shape를 사용하기 전에 사전은 사용하고 있었습니다! 그럼 왜 우리는 Shape에 신경을 써야 할까요?
 
-그 이유는 shape가 _inline cache_ 라고 불리는 또 다른 최적화를 가능하게 하기 때문입니다.
+그 이유는 shape가 **_inline cache_** 라고 불리는 또 다른 최적화를 가능하게 하기 때문입니다.
 
 ### Inline Caches (ICs)
-Shape 뒤에 숨어있는 주된 동기는 Inline Caches(ICs)의 개념이다. ICs는 JavaScript를 신속하게 실행할 수 있게하는 핵심 요소입니다. JavaScript 엔진은 ICs를 사용하여 object에서 property를 찾을수 있는 위치에 대한 정보를 암기하여 높은 cost를 가지는 조회 수를 줄입니다.
+Shape 를 사용하는 주된 이유는 **Inline Caches(ICs)**라는 개념때문입니다. ICs는 JavaScript를 신속하게 실행할 수 있게하는 핵심 요소입니다. JavaScript 엔진은 ICs를 사용하여 object에서 property를 찾을수 있는 위치에 대한 정보를 암기하여, 높은 cost를 가지는 조회  횟수를 줄입니다.
 
-여기 object를 받아서 그 object의 property <kbd>x</kbd>를 반환하는 함수 <kbd>getX</kbd>가 있습니다.
+여기에, object를 받아서 그 object의 property <kbd>x</kbd>를 반환하는 함수 <kbd>getX</kbd>가 있습니다.
 
 ```js
 function getX(o) {
@@ -308,7 +308,7 @@ function getX(o) {
 
 첫 번째 명령문 <kbd>get_by_id</kbd>는 첫 번째 argument (<kbd>arg1</kbd>)에서 property <kbd>'x'</kbd>를 로드하여 결과를 <kbd>loc0</kbd>에 저장합니다. 두 번째 명령문은 <kbd>loc0</kbd>에 저장한 것을 반환합니다.
 
-또한 JSC는 Inline Cache를 초기화되지 않은 두 개의 슬롯으로 구성된 <kbd>get_by_id</kbd> 명령문에 포함합니다.
+또한 JSC는 <kbd>get_by_id</kbd> 명령문에 초기화되지 않은 두 개의 슬롯으로 구성된 Inline Cache를 포함합니다.
 
 <figure class="align-center">
     <img src="{{ site.url }}{{ site.baseurl }}/assets/images/javascript_engine_fundamentals_shape_and_inline_caches/19_ic-2.png" alt="">
@@ -332,7 +332,7 @@ function getX(o) {
 위의 그림을 살펴보겠습니다. 다음 명령문을 실행할 때, IC는 shape만 비교하면 되며, 이전과 같다면 저장되어있는 offset을 보고 value를 가져오면 됩니다. 구체적으로 말하자면, JavaScript 엔진이 IC가 이전에 기록한 shape의 object를 볼 경우, 더 이상 property 정보에 접근할 필요가 없습니다. 그리고 비용이 많이 들어가는 property 정보 조회를 완전히 생략할 수 있습니다. 이 방법은 매번 property를 조회하는 것 보다 훨씬 더 빠릅니다.
 
 ## Storing arrays efficiently
-Array의 경우, array의 property인 _array indices_ 를 저장하는 것이 일반적입니다. 각 property의 값들은 array element라고 부릅니다. 모든 array의 모든array element에 대한 각각의 property attribute들을 저장하는 것은 메모리 낭비일 수 있습니다. 그 대신에, JavaScript 엔진은 array-indexed property 들이 기본적으로 writable, enumerable, 그리고 configurable하다는 점을 사용합니다. 그리고 array element를 다른 이름있는 property(named property)와는 별도로 저장합니다.
+Array의 경우, array의 property인 _array indices_ 를 저장하는 것이 일반적입니다. 각 property의 값들은 array element라고 부릅니다. 모든 array의 모든array element에 대한 각각의 property attribute들을 저장하는 것은 메모리 낭비일 수 있습니다. 그 대신에, JavaScript 엔진은 array-indexed property 들이 기본적으로 writable, enumerable, 그리고 configurable하다는 점을 사용합니다. 그리고 array element를 다른 이름을 가지는 property(named property)와는 별도로 저장합니다.
 
 다음 array를 고려해봅시다.
 
