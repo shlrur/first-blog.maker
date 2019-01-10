@@ -18,6 +18,16 @@ Jekyll은 github에서 제공하는 static website generator입니다. Github re
 # Contents
 
 * [The Problem](#the-problem)
+* [Solution](#solution)
+  * [_site Folder](#_site-folder)
+  * [Solutions for Using Jekyll-Paginate-V2](#solutions-for-using-jekyll-paginate-v2)
+  * [Using CI](#using-ci)
+  * [Solutions for Using Troublesome Task](#solutions-for-using-troublesome-task)
+    * [Git submodule 생성](#git-submodule-생성)
+    * [Travis에 Github repository 연결](#travis에-github-repository-연결)
+    * [Token 생성](#token-생성)
+    * [Config 파일 설정](#config-파일-설정)
+* [Conclusion](#conclusion)
 
 ---
 
