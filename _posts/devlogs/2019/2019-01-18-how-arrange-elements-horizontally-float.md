@@ -14,6 +14,10 @@ comments:   true
 # Contents
 
 * [Using Float](#using-float)
+  * [The clear Property](#the-clear-property)
+  * [The clearfix Hack](#the-clearfix-hack)
+  * [Layout](#layout)
+* [References](#references)
 
 ---
 
@@ -56,12 +60,39 @@ Float에 clear를 할 때, float에 맞춰서 clear를 잘 사용해야 합니�
 
 만약 어떤 float element가 자신을 감싸고 있는 container element보다 높이가 클때는(taller), container element의 바깥으로 _overflow_ 됩니다.
 
-<figure class="align-center">
-    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/how-arrange-elements-horizontally-float/0_clearfix.png" alt="why using clearfix">
-    <figcaption>need clearfix</figcaption>
-</figure>
+그럴때는 아래 코드와 같이 <kbd>overflow: auto;</kbd>를 사용합니다.
 
-그럴때는 <kbd>overflow: auto;</kbd>
+<p class="codepen" data-height="265" data-theme-id="light" data-default-tab="html,result" data-user="shlrur" data-slug-hash="EraXRw" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="EraXRw">
+  <span>See the Pen <a href="https://codepen.io/shlrur/pen/EraXRw/">
+  EraXRw</a> by Heekyum Kim (<a href="https://codepen.io/shlrur">@shlrur</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<br>
+
+<kbd>overflow: auto;</kbd> clearfix는 margin과 padding을 적절히 사용한다면 잘 작동합니다.
+
+아래의 코드는 <kbd>::after</kbd>를 사용하는 최근의 clearfix로서, 더 안정적으로 사용할 수 있습니다.
+
+<p class="codepen" data-height="265" data-theme-id="light" data-default-tab="html,result" data-user="shlrur" data-slug-hash="RvNZwm" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="RvNZwm">
+  <span>See the Pen <a href="https://codepen.io/shlrur/pen/RvNZwm/">
+  RvNZwm</a> by Heekyum Kim (<a href="https://codepen.io/shlrur">@shlrur</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<br>
+
+## Layout
+
+<p class="codepen" data-height="265" data-theme-id="light" data-default-tab="css,result" data-user="shlrur" data-slug-hash="jdELLw" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid black; margin: 1em 0; padding: 1em;" data-pen-title="jdELLw">
+  <span>See the Pen <a href="https://codepen.io/shlrur/pen/jdELLw/">
+  jdELLw</a> by Heekyum Kim (<a href="https://codepen.io/shlrur">@shlrur</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<br>
+
+위의 코드는 **float**를 사용해서 layout을 정의한 것입니다.
+
+header-menu의 li tag를 float를 사용해서 horizontally하게 배치하고 있습니다.
+그리고 .clearfix::after 를 사용해서 <kbd>.column .menu</kbd>와 <kbd>.column .content</kbd>를 horizontally하게 배열하고 있습니다.
 
 ---
 
