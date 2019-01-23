@@ -7,7 +7,7 @@ tags:       etc
 comments:   true
 ---
 
-이번 post에서는 float, display, flex, grid, bootstrap 를 이용한 block element를 가로로 배치하는 방법에 대해서 알아보겠습니다.
+이번 post에서는 float, display, flex, grid 등을 이용한 block element를 가로로 배치하는 방법에 대해서 알아보겠습니다. Bootstrap4 와 같이 모든 속성이 정의되어 있고 element의 class만 지정해서 layout을 잡는 방법도 있지만, 이번 series에서는 순수하게 html과 css만을 사용해서 layout을 배치하는 방법에 대해서 알아보겠습니다.
 
 제가 처음 HTML과 CSS를 공부할 때 가장 먼저 맞닥뜨린 문제가 있었습니다. 바로 **div** element를 가로로 배치하는 것이었습다. 그때는 _block_ 혹은 _inline_ 에 대한 개념이 없을때라, **div** 같은 _block_ element를 어떻게 가로로 배치해야 하는지에 대해서 알지 못했습니다.
 
