@@ -27,16 +27,16 @@ JavaScript는 지난 몇 년 동안 꾸준히 새로운 표준을 발표해왔�
     * [import()](#import())
     * [Legacy RegExp features in JavaScript](#Legacy RegExp features in JavaScript)
     * [BigInt](#BigInt)
-    * [Array.prototype.{flat,flatMap}](#Array.prototype.{flat,flatMap})
-    * [String.prototype.{trimStart,trimEnd}](#String.prototype.{trimStart,trimEnd})
     * [String.prototype.matchAll](#String.prototype.matchAll)
-    * [Object.fromEntries](#Object.fromEntries)
-    * [Well-formed JSON.stringify](#Well-formed JSON.stringify)
   * [Finished Proposal Features](#Finished Proposal Features)
     * [Optional catch binding](#Optional catch binding)
-    * [JSON superset](#JSON superset)
+    * [Subsume JSON(JSON superset)](#JSON superset)
     * [Symbol.prototype.description](#Symbol.prototype.description)
     * [Function.prototype.toString revision](#Function.prototype.toString revision)
+    * [Object.fromEntries](#Object.fromEntries)
+    * [Well-formed JSON.stringify](#Well-formed JSON.stringify)
+    * [String.prototype.{trimStart,trimEnd}](#String.prototype.{trimStart,trimEnd})
+    * [Array.prototype.{flat,flatMap}](#Array.prototype.{flat,flatMap})
 * [References](#references)
 
 ---
@@ -58,7 +58,7 @@ JavaScript는 지난 몇 년 동안 꾸준히 새로운 표준을 발표해왔�
 * Stage-4: 완료(Finished)
   * Indicate that the addition is ready for inclusion in the formal ECMAScript standard
 
-앞의 Stage(0~4)에서 새로 추가될 것으로 이야기됐던 기능들이 Stage 4까지 오지 않는 한 ECMAScript 표준에 추가된다는 보장은 없습니다. 현재(2019년 1월 29일) [ES2019 proposals](https://github.com/tc39/proposals)를 보면, Stage 4인 Finished Proposal에 들어간 기능도 있고 아직 Stage 3에서 수락을 기다리고 있는 기능도 있습니다. 그러므로 아래에서 살펴볼 기능 중에서 Stage 3에 있는 후보들은 ES2019에 포함되지 않을 수도 있습니다. 하지만, Stage 3까지 논의됐다는 것만으로도 충분히 흥미롭고 중요한 기능입니다.
+앞의 Stage(0~4)에서 새로 추가될 것으로 이야기됐던 기능들이 Stage 4까지 오지 않는 한 ECMAScript 표준에 추가된다는 보장은 없습니다. 현재(2019년 1월 30일) [ES2019 proposals](https://github.com/tc39/proposals)를 보면, Stage 4인 Finished Proposal에 들어간 기능도 있고 아직 Stage 3에서 수락을 기다리고 있는 기능도 있습니다. 그러므로 아래에서 살펴볼 기능 중에서 Stage 3에 있는 후보들은 ES2019에 포함되지 않을 수도 있습니다. 하지만, Stage 3까지 논의됐다는 것만으로도 충분히 흥미롭고 중요한 기능입니다.
 
 그리고 ECMAScript에 표준으로 아직 추가되지 않은 기능이지만 몇몇 JavaScript engine(V8, SpiderMonkey 등)에서는 그 기능들을 구현한 경우도 있습니다. 어떤 JavaScript engine에서 제공하는지는 [Can I Use?](https://caniuse.com/) 에서 찾아볼 수 있습니다.
 
@@ -191,52 +191,6 @@ const hugeButString = BigInt('9007199254740991');
 <br>
 <br>
 
-### Array.prototype.{flat,flatMap}
-> 특히 finished proposal로 넘어갈 확률이 높은 proposal입니다.
-[해당 proposal](https://github.com/tc39/proposal-flatMap)은 Array.prototype.flat과 Array.prototype.flatMap을 ECMAScript에 추가하려 합니다.
-
-flat()은 여러 depth를 가지는 array를 한 depth씩 혹은 여러 depth씩 평평하게(flatten) 합니다.
-
-```js
-const nestedArr = [1, [2, [3, [4]]]];
-
-const flat1Depth = nestedArr.flat(1); // == nestedArr.flat(); [1, 2, [3, [4]]]
-const flat2Depth = nestedArr.flat(2); // [1, 2, 3, [4]]
-const flat3Depth = nestedArr.flat(3); // [1, 2, 3, 4]
-const flatMoreDepth = nestedArr.flat(10000); // [1, 2, 3, 4]
-```
-
-flatMap()은 map()과 유사하게 array를 return합니다. 하지만 flatMap은 return되는 array를 한 depth 평평하게 합니다.
-```js
-const example1 = [2, 3, 4].flatMap((x) => [x, x * 2]);
-// example1 === [2, 4, 3, 6, 4, 8]
-
-const example2_1 = ['I am', 'not a', 'boy'].map((d) => {return d.split(' ')});
-// example2_1 === [["I", "am"], ["not", "a"], ["boy"]]
-const example2_2 = ['I am', 'not a', 'boy'].flatMap((d) => {return d.split(' ')});
-// example2_2 === ["I", "am", "not", "a", "boy"]
-```
-
-<br>
-<br>
-
-### String.prototype.{trimStart,trimEnd}
-
-String type은 trim()이라는, 양쪽의 whitespace를 제거하는 method를 표준으로 가지고 있습니다. [해당 proposal](https://github.com/tc39/proposal-string-left-right-trim)은 string의 양쪽이 아닌 한쪽의 whitespace만 제거하는 trimStart()와 trimEnd()라는 method를 제안합니다.
-
-재미있는 점은, 해당 method는 표준에 제정되기 전에 [여러 browser에서 이미 구현](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd#Browser_compatibility)되어 있습니다. Browser에서 ECMAScript로 기능을 넣게하는 경우 중 하나입니다.
-
-```js
-const first = "      My favorite sport ";
-const second = "is kendo.        ";
-console.log(first.trimStart() + second.trimEnd()) // "My favorite sport is kendo."
-```
-
-기능의 추가 외에도, naming/aliasing 도 제안하고 있습니다. ES2017에서 표준으로 추가된 **padStart/padEnd**와 일관성을 유지하기 위해서 **trimLeft/trimRight** 대신 **trimStart/trimEnd**를 제안하고 있습니다.
-
-<br>
-<br>
-
 ### String.prototype.matchAll
 
 [해당 proposal은 **String.prototype.exec**이 단일 결과값을 return하는 것을 보완하여, 모든 결과값을 return하는 **String.prototype.matchAll**을 제안하고 있습니다.](https://github.com/tc39/proposal-string-matchall)
@@ -287,18 +241,6 @@ matches; /* gives exactly what i want, but abuses `replace`,
 
 이러한 단점들이 있기 때문에, 주어진 string에서 정규표현식과 일치하는 모든 결과값을 return하는 **String.prototype.matchAll** 을 표준에 포함하길 제안하고 있습니다.
 
-<br>
-<br>
-
-### Object.fromEntries
-> 특히 finished proposal로 넘어갈 확률이 높은 proposal입니다.
-
-<br>
-<br>
-
-### Well-formed JSON.stringify
-
-
 ## Finished Proposal Features
 마지막 Stage 4는 모든 단계를 거치고 마침내 제안이 수락되고 다음 표준에 포함되어 발표되기만을 기다리는 단계입니다. Stage 3의 proposal이 ECMA-262의 unit test suit인 Test262에 관련 테스트가 작성되고, 최소 2개 이상의 구현이 제공되는 등의 까다로운 추가 조건을 모두 만족하면 마침내 Stage 4로 올라올 수 있습니다.
 
@@ -308,21 +250,129 @@ Stage 4까지 올라온 proposal은 별다른 이변이 없는 이상 다가오�
 
 ### Optional catch binding
 
+[이 proposal은 try와 함께 사용하는 **catch**에 대한 수정을 요구하고 있습니다.](https://github.com/tc39/proposal-optional-catch-binding)
+
+기본 주장은 **catch**에 binding되는 **exception variable**이 사용되지 않는 경우가 많으니, 생략할 수 있게 문법적인 변경을 요청하는 것입니다.
+
+```js
+try {
+  // try to use a web feature which may not be implemented
+} catch (unused) {
+  // fall back to a less desirable web feature with broader support
+}
+
+// or
+
+let isTheFeatureImplemented = false;
+try {
+  // stress the required bits of the web API
+  isTheFeatureImplemented = true;
+} catch (unused) {}
+
+// or
+
+let parseResult = someFallbackValue;
+try {
+  parseResult = JSON.parse(potentiallyMalformedJSON);
+} catch (unused) {}
+```
+
+위의 코드에서 보여주는 3가지 경우에는 **catch**에 binding되는 _unused_ 라는 parameter는 사용되지 않으며 불필요합니다. 사용하지 않는 variable이 있다는건 프로그래밍 에러를 야기할 수도 있습니다.
+
+그래서 해당 proposal은 아래와 같은 코드의 허용을 제안합니다.
+
+```js
+try {
+  // ...
+} catch {
+  // ...
+}
+```
+
 <br>
 <br>
 
-### JSON superset
+### Subsume JSON(JSON superset)
+
+[해당 proposal은 ECMAScript의 string이 **U+2028**과 **U+2029**를 포함하기를 제안합니다.](https://github.com/tc39/proposal-json-superset)
+
+JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character 를 포함합니다. 하지만 ECMAScript string은 포함하지 않습니다.
+
+이 때문에 specification에 있어서 불필요한 복잡성이 증가하고, 개발자와 사용자에게 부담이 더해집니다. 그리고 valid JSON을 valid ECMAScript로 넣는데 불필요한 과정이 필요하게 됩니다.
+
+이를 해결하기 위해서, JSON syntax는 ECMA-404에 정의되어있고 RFC 7159로 인해서 영구히 fix 되었으니, ECMA-262에 의한 _DoubleStringCharacter_ 과 _SingleStringCharacter_ 를 확장해서 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character 를 허용하자고 제안하고 있습니다.
 
 <br>
 <br>
 
 ### Symbol.prototype.description
 
+[해당 proposal은 Symbol을 사용함에 있어서, description에 바로 접근할 수 있는 **Symbol.prototype.description**의 추가를 제안하고 있습니다.](https://github.com/tc39/proposal-Symbol-description)
+
+기존에는 Symbol의 description을 알기 위해서 Symbol.prototype.toString을 사용했지만, description 만을 얻기 위해서는 적절치 않은 방법이라고 말하고 있습니다.
+
 <br>
 <br>
 
 ### Function.prototype.toString revision
 
+
+
+<br>
+<br>
+
+### Object.fromEntries
+
+<br>
+<br>
+
+### Well-formed JSON.stringify
+
+<br>
+<br>
+
+### String.prototype.{trimStart,trimEnd}
+
+String type은 trim()이라는, 양쪽의 whitespace를 제거하는 method를 표준으로 가지고 있습니다. [해당 proposal](https://github.com/tc39/proposal-string-left-right-trim)은 string의 양쪽이 아닌 한쪽의 whitespace만 제거하는 trimStart()와 trimEnd()라는 method를 제안합니다.
+
+재미있는 점은, 해당 method는 표준에 제정되기 전에 [여러 browser에서 이미 구현](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd#Browser_compatibility)되어 있습니다. Browser에서 ECMAScript로 기능을 넣게하는 경우 중 하나입니다.
+
+```js
+const first = "      My favorite sport ";
+const second = "is kendo.        ";
+console.log(first.trimStart() + second.trimEnd()) // "My favorite sport is kendo."
+```
+
+기능의 추가 외에도, naming/aliasing 도 제안하고 있습니다. ES2017에서 표준으로 추가된 **padStart/padEnd**와 일관성을 유지하기 위해서 **trimLeft/trimRight** 대신 **trimStart/trimEnd**를 제안하고 있습니다.
+
+<br>
+<br>
+
+### Array.prototype.{flat,flatMap}
+
+[해당 proposal](https://github.com/tc39/proposal-flatMap)은 Array.prototype.flat과 Array.prototype.flatMap을 ECMAScript에 추가하려 합니다.
+
+flat()은 여러 depth를 가지는 array를 한 depth씩 혹은 여러 depth씩 평평하게(flatten) 합니다.
+
+```js
+const nestedArr = [1, [2, [3, [4]]]];
+
+const flat1Depth = nestedArr.flat(1); // == nestedArr.flat(); [1, 2, [3, [4]]]
+const flat2Depth = nestedArr.flat(2); // [1, 2, 3, [4]]
+const flat3Depth = nestedArr.flat(3); // [1, 2, 3, 4]
+const flatMoreDepth = nestedArr.flat(10000); // [1, 2, 3, 4]
+```
+
+flatMap()은 map()과 유사하게 array를 return합니다. 하지만 flatMap은 return되는 array를 한 depth 평평하게 합니다.
+```js
+const example1 = [2, 3, 4].flatMap((x) => [x, x * 2]);
+// example1 === [2, 4, 3, 6, 4, 8]
+
+const example2_1 = ['I am', 'not a', 'boy'].map((d) => {return d.split(' ')});
+// example2_1 === [["I", "am"], ["not", "a"], ["boy"]]
+const example2_2 = ['I am', 'not a', 'boy'].flatMap((d) => {return d.split(' ')});
+// example2_2 === ["I", "am", "not", "a", "boy"]
+```
 
 ---
 
@@ -342,3 +392,6 @@ Stage 4까지 올라온 proposal은 별다른 이변이 없는 이상 다가오�
 * [Array.prototype.{flat,flatMap}](https://github.com/tc39/proposal-flatMap)
 * [String.prototype.{trimStart,trimEnd}](https://github.com/tc39/proposal-string-left-right-trim)
 * [String.prototype.matchAll](https://github.com/ljharb/String.prototype.matchAll)
+* [Optional catch binding](https://github.com/tc39/proposal-optional-catch-binding)
+* [Subsume JSON(JSON superset)](https://github.com/tc39/proposal-json-superset)
+* [Symbol.prototype.description](https://github.com/tc39/proposal-Symbol-description)
