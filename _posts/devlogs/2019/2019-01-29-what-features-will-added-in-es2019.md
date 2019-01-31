@@ -316,7 +316,45 @@ JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARA
 
 ### Function.prototype.toString revision
 
+[해당 proposal의 목적은 Function.prototype.toString 의 현재 기능을 바꾸는 것입니다.](https://github.com/tc39/Function-prototype-toString-revision)
 
+Function.prototype.toString은 Object.prototype.toString을 그대로 쓰는 것이 아니라 override해서 사용하고 있습니다.
+
+이전의 ECMAScript에서 Function.prototype.toString을 실행하면 다음 중 하나가 발생합니다.
+
+* ECMAScript engine에 따른 function의 source code가 string으로 반환 됨.
+* ECMAScript engine이 적절한 source code를 생성할 수 없을때는, _evel_ 을 사용했을 때 _SyntaxError_ 를 유발하는 string을 반환 함.
+
+이 proposal에서 제안하는 solution은 특정 case마다 구분해놓았습니다.
+
+* ECMAScript code를 사용해서 정의한 function의 경우 original source code를 return해야 한다. (for functions defined using ECMAScript code, toString must return source text slice from beginning of first token to end of last token matched by the appropriate grammar production)
+```js
+console.log(function () { console.log('My Function!'); }.toString());
+// case user-defined => "function () { console.log('My Function!'); }"
+```
+* built-in function 객체 및 binding된 이질적인 객체의 경우, NativeFunction외에 어떤것도 return해서는 안된다. (for built-in function objects and bound function exotic objects, toString must not return anything other than NativeFunction)
+```js
+console.log(Number.parseInt.toString());
+// case built-in => "function () { [native code] }"
+
+console.log(function () { }.bind(0).toString());
+// case binding => "function () { [native code] }"
+```
+* ECMAScript code를 사용해서 정의하지 않은 호출 가능한 객체의 경우 NativeFunction을 반환해야 함. (for callable objects which were not defined using ECMAScript code, toString must return NativeFunction)
+```js
+console.log(Symbol.toString());
+// case Built-in callable => "function Symbol() { [native code] }"
+```
+* Function 및 GeneratorFunction 생성자를 통해 dynamic하게 생성되는 function의 경우, ToString이 소스 텍스트를 합성해야 함. (for functions created dynamically (through the Function and GeneratorFunction constructors), toString must synthesise a source text)
+```js
+console.log(Function().toString());
+// case Dynamically generated => "function anonymous() {}"
+```
+* 이 외의 모든 다른 object에 대해서는 TypeError가 나온다. (for all other objects, toString must throw a TypeError exception)
+```js
+Function.prototype.toString.call(1)
+// case all other objects => "Uncaught TypeError: Function.prototype.toString requires that 'this' be a Function"
+```
 
 <br>
 <br>
@@ -395,3 +433,4 @@ const example2_2 = ['I am', 'not a', 'boy'].flatMap((d) => {return d.split(' ')}
 * [Optional catch binding](https://github.com/tc39/proposal-optional-catch-binding)
 * [Subsume JSON(JSON superset)](https://github.com/tc39/proposal-json-superset)
 * [Symbol.prototype.description](https://github.com/tc39/proposal-Symbol-description)
+* [Function.prototype.toString revision](https://github.com/tc39/Function-prototype-toString-revision)
