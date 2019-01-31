@@ -22,21 +22,21 @@ JavaScript는 지난 몇 년 동안 꾸준히 새로운 표준을 발표해왔�
 
 * [The TC39 Process](#the-tc39-process)
 * [ES2019 Candidates](#es2019-candidates)
-  * [Stage 3 Features](#Stage 3 Features)
-    * [globalThis](#globalThis)
-    * [import()](#import())
-    * [Legacy RegExp features in JavaScript](#Legacy RegExp features in JavaScript)
-    * [BigInt](#BigInt)
-    * [String.prototype.matchAll](#String.prototype.matchAll)
-  * [Finished Proposal Features](#Finished Proposal Features)
-    * [Optional catch binding](#Optional catch binding)
-    * [Subsume JSON(JSON superset)](#JSON superset)
-    * [Symbol.prototype.description](#Symbol.prototype.description)
-    * [Function.prototype.toString revision](#Function.prototype.toString revision)
-    * [Object.fromEntries](#Object.fromEntries)
-    * [Well-formed JSON.stringify](#Well-formed JSON.stringify)
-    * [String.prototype.{trimStart,trimEnd}](#String.prototype.{trimStart,trimEnd})
-    * [Array.prototype.{flat,flatMap}](#Array.prototype.{flat,flatMap})
+  * [Stage 3 Features](#stage-3-features)
+    * [globalThis](#globalthis)
+    * [import()](#import)
+    * [Legacy RegExp features in JavaScript](#legacy-regexp-features-in-javascript)
+    * [BigInt](#bigint)
+    * [String.prototype.matchAll](#stringprototypematchall)
+  * [Finished Proposal Features](#finished-proposal-features)
+    * [Optional catch binding](#optional-catch-binding)
+    * [Subsume JSON(JSON superset)](#subsume-jsonjson-superset)
+    * [Symbol.prototype.description](#symbolprototypedescription)
+    * [Function.prototype.toString revision](#functionprototypetostring-revision)
+    * [Object.fromEntries](#objectfromentries)
+    * [Well-formed JSON.stringify](#well-formed-jsonstringify)
+    * [String.prototype.{trimStart,trimEnd}](#stringprototypetrimstarttrimend)
+    * [Array.prototype.{flat,flatMap}](#arrayprototypeflatflatmap)
 * [References](#references)
 
 ---
@@ -83,7 +83,7 @@ ECMAScript를 사용해서 코드를 작성할 때, 어느 환경에서나 적�
 * 엉성한 standalone function call에서 역시 **this**는 작동하지만, module이나 strict mode의 function에서 **this**는 undefined입니다.
 * **Function('return this')()** 로 global object에 접근할 수 있지만, Chrome Apps와 같은 CSP setting에서는 접근 불가능합니다.
 
-위와 같은 문제때문에, ECMAScript를 사용하는 환경에 상관없이 global object에 접근하기가 힘듭니다.
+위와 같은 문제 때문에, ECMAScript를 사용하는 환경에 상관없이 global object에 접근하기가 힘듭니다.
 
 이를 해결하기 위해서 제안된 것이 [**globalThis**](https://github.com/tc39/proposal-global)입니다. **globalThis** property는 환경에 상관없이 global object에 접근 가능한 standard way입니다.
 
@@ -119,14 +119,15 @@ var getGlobal = function () {
 
 ### import()
 
-[import()](https://github.com/tc39/proposal-dynamic-import)는 기존의 _pre-runtime에 import를 하는 정적인 방식_ 이 아닌, **runtime에 import할 수 있는 동적인 방식** 을 제안하고 있습니다.
+[import()](https://github.com/tc39/proposal-dynamic-import)는 기존의 _pre-runtime에 import를 하는 정적인 방식_ 이 아닌, **runtime에 import 할 수 있는 동적인 방식** 을 제안하고 있습니다.
 
 #### motivation
-현재 module import를 위해 사용하는 방식은 정적인 선언(static declarations)입니다. Import 할 module의 식별자로 문자열을 받고, pre-runtime에 "linking" process를 거침으로서 local scope에 binding합니다. 이런 정적인 선언은 90%의 경우에 매우 좋은 방식입니다.<br>
-하지만, runtime에 JavaScript application의 일부를 load할 수 있는 것도 바람직한 방법입니다. 그 이유는 다음과 같습니다. 사용자의 언어와 같은 **runtime에만 알 수 있는 요소**들이 있습니다. 그리고 사용되지 않을 코드는 load하지 않기 때문에 **performance 측면**에서도 이유가 될 수 있습니다. 혹은 중요하지 않은 module을 load했을 때 생기는 문제를 피함으로서 견고함에도 이유가 될 수 있습니다.
+현재 module import를 위해 사용하는 방식은 정적인 선언(static declarations)입니다. Import 할 module의 식별자로 문자열을 받고, pre-runtime에 "linking" process를 거침으로써 local scope에 binding 합니다. 이런 정적인 선언은 90%의 경우에 매우 좋은 방식입니다.
+
+하지만, runtime에 JavaScript application의 일부를 load 할 수 있는 것도 바람직한 방법입니다. 그 이유는 다음과 같습니다. 사용자의 언어와 같은 **runtime에만 알 수 있는 요소**들이 있습니다. 그리고 사용되지 않을 코드는 load 하지 않기 때문에 **performance 측면**에서도 이유가 될 수 있습니다. 혹은 중요하지 않은 module을 load 했을 때 생기는 문제를 피함으로써 견고함에도 이유가 될 수 있습니다.
 
 #### Proposed solution
-해당 proposal은 function처럼 동작하는 **import(specifier)**를 제안합니다. **이 함수는 request module에 대한 module namespace object를 가지는 promise를 return합니다. 해당 module namespace object는 fetching, instantiating, 그리고 관련된 다른 module에 대한 evaluating까지 완료한 후 자신의 module로서 제공됩니다.**
+해당 proposal은 function처럼 동작하는 **import(specifier)**를 제안합니다. **이 함수는 request module에 대한 module namespace object를 가지는 promise를 return 합니다. 해당 module namespace object는 fetching, instantiating, 그리고 관련된 다른 module에 대한 evaluating까지 완료한 후 자신의 module로써 제공됩니다.**
 import(specifier)의 **specifier**는 string literal뿐만 아니라 backtick 형태도 지원합니다.
 
 #### Example
@@ -164,7 +165,7 @@ import(specifier)의 **specifier**는 string literal뿐만 아니라 backtick �
 
 [해당 proposal](https://github.com/tc39/proposal-regexp-legacy-features)은 **RegExp.$1와 같은 생성자의 static properties**와 **RegExp.prototype.compile method**가 RegExp에서 deprecated 된 것에 문제를 제기하고 있습니다.
 
-[해당 기능들이 deprecated된 이유는 encapsulation을 위반했기 때문이라는 설명](https://github.com/tc39/proposal-regexp-legacy-features/blob/master/subclass-restriction-motivation.md)을 하며, 해결책을 제안하고 있습니다.
+[해당 기능들이 deprecated 된 이유는 encapsulation을 위반했기 때문이라는 설명](https://github.com/tc39/proposal-regexp-legacy-features/blob/master/subclass-restriction-motivation.md)을 하며, 해결책을 제안하고 있습니다.
 
 
 <br>
@@ -172,7 +173,7 @@ import(specifier)의 **specifier**는 string literal뿐만 아니라 backtick �
 
 ### BigInt
 
-[BigInt](https://github.com/tc39/proposal-bigint)는 2<sup>53</sup> 보다 큰 수를 표현하기 위한 새로운 primitive type입니다. (JavaScript에서 기존의 숫자를 표현하는 primitive type인 Number는 2<sup>53</sup>까지만 표현 가능합니다.)
+[BigInt](https://github.com/tc39/proposal-bigint)는 2<sup>53</sup> 보다 큰 수를 표현하기 위한 새로운 primitive type입니다. (JavaScript에서 기존의 숫자를 표현하는 primitive type인 Number는 2<sup>53</sup>까지만 표현 가능합니다)
 
 BigInt의 syntax는 다음과 같이 integer의 끝에 'n'을 붙이거나 생성자를 호출합니다.
 
@@ -193,9 +194,9 @@ const hugeButString = BigInt('9007199254740991');
 
 ### String.prototype.matchAll
 
-[해당 proposal은 **String.prototype.exec**이 단일 결과값을 return하는 것을 보완하여, 모든 결과값을 return하는 **String.prototype.matchAll**을 제안하고 있습니다.](https://github.com/tc39/proposal-string-matchall)
+[해당 proposal은 **String.prototype.exec**이 단일 결과값을 return 하는 것을 보완하여, 모든 결과값을 return 하는 **String.prototype.matchAll**을 제안하고 있습니다.](https://github.com/tc39/proposal-string-matchall)
 
-기존의 [String.prototype.exec은 단일 결과값을 이러한 format](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec#%EC%84%A4%EB%AA%85)으로 보여줍니다. exec()를 사용해서 모든 만족하는 결과를 얻기 위해서는 loop를 사용해야 합니다. 이런 과정을 거쳐서 주어진 string에서 정규표현식과 일치하는 모든 부분을 찾는 logic은 아래의 코드와 같습니다.
+기존의 [String.prototype.exec은 단일 결과값을 이러한 format](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec#%EC%84%A4%EB%AA%85)으로 보여줍니다. exec()을 사용해서 모든 만족하는 결과를 얻기 위해서는 loop를 사용해야 합니다. 이런 과정을 거쳐서 주어진 string에서 정규표현식과 일치하는 모든 부분을 찾는 logic은 아래의 코드와 같습니다.
 
 ```js
 var regex = /t(e)(st(\d?))/g;
@@ -239,7 +240,7 @@ matches; /* gives exactly what i want, but abuses `replace`,
 
 위의 코드는 앞의 코드가 가지는 단점을 보완했지만, replace 함수를 남용하였고, 역시 regex의 lastIndex property를 변경했다는 단점이 있습니다. 그리고 match 변수를 직접 작성해야 합니다.
 
-이러한 단점들이 있기 때문에, 주어진 string에서 정규표현식과 일치하는 모든 결과값을 return하는 **String.prototype.matchAll** 을 표준에 포함하길 제안하고 있습니다.
+이러한 단점들이 있기 때문에, 주어진 string에서 정규표현식과 일치하는 모든 결과값을 return 하는 **String.prototype.matchAll** 을 표준에 포함하길 제안하고 있습니다.
 
 ## Finished Proposal Features
 마지막 Stage 4는 모든 단계를 거치고 마침내 제안이 수락되고 다음 표준에 포함되어 발표되기만을 기다리는 단계입니다. Stage 3의 proposal이 ECMA-262의 unit test suit인 Test262에 관련 테스트가 작성되고, 최소 2개 이상의 구현이 제공되는 등의 까다로운 추가 조건을 모두 만족하면 마침내 Stage 4로 올라올 수 있습니다.
@@ -252,7 +253,7 @@ Stage 4까지 올라온 proposal은 별다른 이변이 없는 이상 다가오�
 
 [이 proposal은 try와 함께 사용하는 **catch**에 대한 수정을 요구하고 있습니다.](https://github.com/tc39/proposal-optional-catch-binding)
 
-기본 주장은 **catch**에 binding되는 **exception variable**이 사용되지 않는 경우가 많으니, 생략할 수 있게 문법적인 변경을 요청하는 것입니다.
+기본 주장은 **catch**에 binding 되는 **exception variable**이 사용되지 않는 경우가 많으니, 생략할 수 있게 문법적인 변경을 요청하는 것입니다.
 
 ```js
 try {
@@ -277,7 +278,7 @@ try {
 } catch (unused) {}
 ```
 
-위의 코드에서 보여주는 3가지 경우에는 **catch**에 binding되는 _unused_ 라는 parameter는 사용되지 않으며 불필요합니다. 사용하지 않는 variable이 있다는건 프로그래밍 에러를 야기할 수도 있습니다.
+위의 코드에서 보여주는 3가지 경우에는 **catch**에 binding 되는 _unused_ 라는 parameter는 사용되지 않으며 불필요합니다. 사용하지 않는 variable이 있다는 건 프로그래밍 에러를 일으킬 수도 있습니다.
 
 그래서 해당 proposal은 아래와 같은 코드의 허용을 제안합니다.
 
@@ -296,11 +297,11 @@ try {
 
 [해당 proposal은 ECMAScript의 string이 **U+2028**과 **U+2029**를 포함하기를 제안합니다.](https://github.com/tc39/proposal-json-superset)
 
-JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character 를 포함합니다. 하지만 ECMAScript string은 포함하지 않습니다.
+JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character를 포함합니다. 하지만 ECMAScript string은 포함하지 않습니다.
 
 이 때문에 specification에 있어서 불필요한 복잡성이 증가하고, 개발자와 사용자에게 부담이 더해집니다. 그리고 valid JSON을 valid ECMAScript로 넣는데 불필요한 과정이 필요하게 됩니다.
 
-이를 해결하기 위해서, JSON syntax는 ECMA-404에 정의되어있고 RFC 7159로 인해서 영구히 fix 되었으니, ECMA-262에 의한 _DoubleStringCharacter_ 과 _SingleStringCharacter_ 를 확장해서 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character 를 허용하자고 제안하고 있습니다.
+이를 해결하기 위해서, JSON syntax는 ECMA-404에 정의되어있고 RFC 7159로 인해서 영구히 fix 되었으니, ECMA-262에 의한 _DoubleStringCharacter_ 과 _SingleStringCharacter_ 를 확장해서 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARATOR** character를 허용하자고 제안하고 있습니다.
 
 <br>
 <br>
@@ -309,7 +310,7 @@ JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARA
 
 [해당 proposal은 Symbol을 사용함에 있어서, description에 바로 접근할 수 있는 **Symbol.prototype.description**의 추가를 제안하고 있습니다.](https://github.com/tc39/proposal-Symbol-description)
 
-기존에는 Symbol의 description을 알기 위해서 Symbol.prototype.toString을 사용했지만, description 만을 얻기 위해서는 적절치 않은 방법이라고 말하고 있습니다.
+기존에는 Symbol의 description을 알기 위해서 Symbol.prototype.toString을 사용했지만, description만을 얻기 위해서는 적절치 않은 방법이라고 말하고 있습니다.
 
 <br>
 <br>
@@ -318,21 +319,21 @@ JSON string은 unescaped **U+2028 LINE SEPARATOR** 와 **U+2029 PARAGRAPH SEPARA
 
 [해당 proposal의 목적은 Function.prototype.toString 의 현재 기능을 바꾸는 것입니다.](https://github.com/tc39/Function-prototype-toString-revision)
 
-Function.prototype.toString은 Object.prototype.toString을 그대로 쓰는 것이 아니라 override해서 사용하고 있습니다.
+Function.prototype.toString은 Object.prototype.toString을 그대로 쓰는 것이 아니라 override 해서 사용하고 있습니다.
 
 이전의 ECMAScript에서 Function.prototype.toString을 실행하면 다음 중 하나가 발생합니다.
 
-* ECMAScript engine에 따른 function의 source code가 string으로 반환 됨.
-* ECMAScript engine이 적절한 source code를 생성할 수 없을때는, _evel_ 을 사용했을 때 _SyntaxError_ 를 유발하는 string을 반환 함.
+* ECMAScript engine에 따른 function의 source code가 string으로 반환됨.
+* ECMAScript engine이 적절한 source code를 생성할 수 없을때는, _evel_ 을 사용했을 때 _SyntaxError_ 를 유발하는 string을 반환함.
 
 이 proposal에서 제안하는 solution은 특정 case마다 구분해놓았습니다.
 
-* ECMAScript code를 사용해서 정의한 function의 경우 original source code를 return해야 한다. (for functions defined using ECMAScript code, toString must return source text slice from beginning of first token to end of last token matched by the appropriate grammar production)
+* ECMAScript code를 사용해서 정의한 function의 경우 original source code를 return 해야 한다. (for functions defined using ECMAScript code, toString must return source text slice from beginning of first token to end of last token matched by the appropriate grammar production)
 ```js
 console.log(function () { console.log('My Function!'); }.toString());
 // case user-defined => "function () { console.log('My Function!'); }"
 ```
-* built-in function 객체 및 binding된 이질적인 객체의 경우, NativeFunction외에 어떤것도 return해서는 안된다. (for built-in function objects and bound function exotic objects, toString must not return anything other than NativeFunction)
+* built-in function 객체 및 binding 된 이질적인 객체의 경우, NativeFunction외에 어떤 것도 return 해서는 안된다. (for built-in function objects and bound function exotic objects, toString must not return anything other than NativeFunction)
 ```js
 console.log(Number.parseInt.toString());
 // case built-in => "function () { [native code] }"
@@ -345,7 +346,7 @@ console.log(function () { }.bind(0).toString());
 console.log(Symbol.toString());
 // case Built-in callable => "function Symbol() { [native code] }"
 ```
-* Function 및 GeneratorFunction 생성자를 통해 dynamic하게 생성되는 function의 경우, ToString이 소스 텍스트를 합성해야 함. (for functions created dynamically (through the Function and GeneratorFunction constructors), toString must synthesise a source text)
+* Function 및 GeneratorFunction 생성자를 통해 dynamic 하게 생성되는 function의 경우, ToString이 소스 텍스트를 합성해야 함. (for functions created dynamically (through the Function and GeneratorFunction constructors), toString must synthesise a source text)
 ```js
 console.log(Function().toString());
 // case Dynamically generated => "function anonymous() {}"
@@ -361,10 +362,70 @@ Function.prototype.toString.call(1)
 
 ### Object.fromEntries
 
+[해당 proposal에서는 **Object.fromEntries** 라는 static method를 제안하고 있습니다.](https://github.com/tc39/proposal-object-from-entries)
+
+**Object.fromEntries**는 key-value 쌍의 list(array)를 object로 바꿔주는 ECMAScript의 static method입니다.
+
+```js
+obj = Object.fromEntries([['a', 0], ['b', 1]]);
+console.log(obj);
+// => { a: 0, b: 1 }
+```
+
+Object.fromEntries가 필요한 이유는 다음과 같습니다.
+
+Array나 Map 등 다양한 structure에 저장된 data를 한 형태에서 다른 형태로 변환하는 작업은 일반적입니다. 두 data 구조가 모두 iterable할 때 아래의 코드와 같이 간단히 해결할 수 있습니다.
+```js
+map = new Map().set('foo', true).set('bar', false);
+arr = Array.from(map);
+set = new Set(map.values());
+```
+
+Map의 iterable entries는 key-value 형태를 가집니다. 이런 형태는 Object.entries가 return 하는 형태와 잘 들어맞기 때문에, object를 Map으로 잘 변환할 수 있습니다.
+```js
+obj = { foo: true, bar: false };
+map = new Map(Object.entries(obj));
+```
+
+**하지만, key-value 형태에서 객체를 만들기 위한 역방향 Object.entries가 없으므로**, 일반적으로 helper나 inline reducer를 사용해야 합니다.
+```js
+obj = Array.from(map).reduce((acc, [ key, val ]) => Object.assign(acc, { [key]: val }), {});
+```
+
+이렇게 여러 방법으로 해당 기능을 구현할 수 있지만, 해당 method들이 본래의 목적으로 사용되는 것이 아니기 때문에 잠재적인 문제를 가질 수 있습니다.
+
+> [Lodash에서는 이미 해당 기능이 구현되어 있습니다.](https://lodash.com/docs/4.17.11#fromPairs)
+
 <br>
 <br>
 
 ### Well-formed JSON.stringify
+
+[해당 proposal](https://github.com/tc39/proposal-well-formed-stringify)의 동기는 다음과 같습니다.
+
+[RFC 8259 section 8.1](https://tools.ietf.org/html/rfc8259#section-8.1) 는 JSON이 closed ecosystem 밖에서 가져온 text를 UTF-8을 사용해서 encoding 하길 원합니다. 하지만, ECMAScript의 JSON.stringify은 UTF-8에서 표현할 수 없는 code point도 string으로 return 합니다. 특히 surrogate code인 U+D800 ~ U+DFFF가 있습니다. 이 코드는 UTF-8에서 다른 목적으로 사용하기 위해 예약되어 있습니다. 그리고 [JSON.stringify의 description](https://tc39.github.io/ecma262/#sec-json.stringify)과는 반대로, 몇몇 string은 UFT-16에 들어가지 않습니다. 왜냐하면, [The Unicode Standard, Version 10.0.0, Section 3.4](https://unicode.org/versions/Unicode10.0.0/ch03.pdf#G7404)의 definition D91에 "UTF-16 code unit에서 D800<sub>16</sub>에서 DFFF<sub>16</sub>는 부적절하다(isolated UTF-16 code units in the range D800<sub>16</sub>..DFFF<sub>16</sub> are ill-formed)"라고 되어있기 때문입니다. 그리고 D89에 의해서 UFT-16에서 제외되었습니다.
+
+이런 문제를 해결하기 위해서, _unpaired surrogate code points를 단일 UTF-16 code unit으로 return 하는 대신, JSON escape sequenc로 표현_ 하는 것을 제안하고 있습니다. 아래의 코드에서 예시를 보여주고 있습니다.
+
+```js
+// Non-BMP characters still serialize to surrogate pairs.
+JSON.stringify('𝌆')
+// → '"𝌆"'
+JSON.stringify('\uD834\uDF06')
+// → '"𝌆"'
+
+// Unpaired surrogate code units will serialize to escape sequences.
+JSON.stringify('\uDF06\uD834')
+// → '"\\udf06\\ud834"'
+JSON.stringify('\uDEAD')
+// → '"\\udead"'
+```
+
+현재,
+* V8, enabled by default in V8 v7.2.10 and Chrome 72
+* SpiderMonkey, shipping in Firefox 64
+* JavaScriptCore, shipping in Safari Technology Preview 73
+에 구현되어 있습니다.
 
 <br>
 <br>
@@ -373,7 +434,7 @@ Function.prototype.toString.call(1)
 
 String type은 trim()이라는, 양쪽의 whitespace를 제거하는 method를 표준으로 가지고 있습니다. [해당 proposal](https://github.com/tc39/proposal-string-left-right-trim)은 string의 양쪽이 아닌 한쪽의 whitespace만 제거하는 trimStart()와 trimEnd()라는 method를 제안합니다.
 
-재미있는 점은, 해당 method는 표준에 제정되기 전에 [여러 browser에서 이미 구현](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd#Browser_compatibility)되어 있습니다. Browser에서 ECMAScript로 기능을 넣게하는 경우 중 하나입니다.
+재미있는 점은, 해당 method는 표준에 제정되기 전에 [여러 browser에서 이미 구현](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd#Browser_compatibility) 되어 있습니다. Browser에서 ECMAScript로 기능을 넣게하는 경우 중 하나입니다.
 
 ```js
 const first = "      My favorite sport ";
@@ -434,3 +495,7 @@ const example2_2 = ['I am', 'not a', 'boy'].flatMap((d) => {return d.split(' ')}
 * [Subsume JSON(JSON superset)](https://github.com/tc39/proposal-json-superset)
 * [Symbol.prototype.description](https://github.com/tc39/proposal-Symbol-description)
 * [Function.prototype.toString revision](https://github.com/tc39/Function-prototype-toString-revision)
+* [Object.fromEntries](https://github.com/tc39/proposal-object-from-entries)
+* [fromPairt - lodash](https://lodash.com/docs/4.17.11#fromPairs)
+* [Well-formed JSON.stringify](https://github.com/tc39/proposal-well-formed-stringify)
+* [RFC 8259 section 8.1](https://tools.ietf.org/html/rfc8259#section-8.1)
