@@ -53,13 +53,40 @@ comments:   true
 * Prerendering: Build시에 client-side application을 실행해서 초기 상태를 static HTML로 저장합니다.
 
 **Performance**
-* TTFB: Time to First Byte - seen as the time between clicking a link and the first bit of content coming in.
-* FP: First Paint - the first time any pixel gets becomes visible to the user.
-* FCP: First Contentful Paint - the time when requested content (article body, etc) becomes visible.
-* TTI: Time To Interactive - the time at which a page becomes interactive (events wired up, etc).
+* TTFB: Time to First Byte - 링크를 클릭했을 때와 해당 링크 contents의 첫 번째 bit가 들어왔을 때 사이의 시간.
+* FP: First Paint - 사용자가 첫 번째 pixel을 볼 수 있는 시간.
+* FCP: First Contentful Paint - Article body같은 요청한 내용이 보이는 시간.
+* TTI: Time To Interactive - Page가 interactive(event 연결 등)하게 된 시간.
+
+---
+
+# Server Rendering
+
+**Server rendering은 요청에 대한 page의 전체 HTML을 server에서 생성합니다. 이 방식은 browser에 전달되기 전에 page를 모두 제작하기 떄문에, client-side에서 data를 가져오거나 템플링을 위한 추가 round-trip이 발생하지 않습니다.**
+
+Server rendering에서는 일반적으로 First Paint(FP)와 First Contentful Paint(FCP)가 빠릅니다. Page의 logic과 rendering을 server에서 실행하면 client에서 많은 JavaScript가 필요하지 않게 되므로 빠른 Time to Interactive(TTI)를 얻을 수 있습니다. 이러한 방법들은 server rendering이 사용자의 browser에 오직 text와 link만 보낸다면 유용할 수 있습니다. 이러한 접근 방식은 넓은 범위의 장치 및 네트워크 상태에서 잘 작동하며, streaming document parsing과 같은 browser 최적화에 대해서 흥미롭게 이야기할 수 있습니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/0_server-rendering-tti.png" alt="server rendering TTI">
+</figure>
+
+Server rendering의 경우, JavaScript때문에 생기는 loading으로 인해서 page가 로딩되는 것을 기다리는 경우가 거의 없습니다. Third-party JS를 제외할 수 없는 경우에도, server rendering을 사용한다면 First-party JS cost가 줄어들기 때문에 더 많은 여유 자원을 사용할 수 있습니다. 그러나 이 접근 방식의 주요 단점은 server에서 page를 생성하는데 시간이 걸리기 때문에 종종 Time to First Byte(TTFB)가 느려질 수 있다는 점입니다.
+
+Server rendering이 자신의 application에 충분한지 여부는 어떤 유형의 환경을 구축하느냐에 달려있습니다. Server rendering과 client rendering사이에서 어떤 방식이 올바른 application 방식이냐에 대한 오랜 논쟁이 있지만, 더 중요한 사실은 server rendering을 어떤 page에는 적용하고 어떤 page에는 적용하지 않도록 고를 수 있다는 점입니다. 일부 사이트는 hybrid rendering 기술을 적용함으로써 성공을 거두었습니다. Netflix를 예로 들면, Netflix는 비교적 정적인 page는 server rendering을 사용하고, 많은 상호작용이 많이 필요한 page에서는 JS를 prefetch하여 많은 client rendering이 필요한 page가 빨리 loading 되도록 했습니다.
+
+많은 최신의 framework, library, 그리고 architecture들을 통해서 client와 server 모두에서 동일한 application을 rendering할 수 있습니다. 이러한 기술들을 Server rendering을 위해 사용할 수 있지만, **server와 client 모두**에서 rendering을 할 수 있는 architecture들은 매우 다른 performance 특성과 trade-off들을 가지는 자체 유형의 solution이라는 점에 유의해야 합니다.
+
+React 사용자들은 [renderToString()](https://reactjs.org/docs/react-dom-server.html) 혹은 server rendering을 위한 [Next.js](https://nextjs.org/)와 같은 solution을 사용할 수 있습니다.
+
+Vue 사용자들은 Vue의 (server rendering guide)[https://ssr.vuejs.org/]를 보거나 [Nuxt](https://nuxtjs.org/)를 사용할 수 있습니다.
+
+Angular 사용자들에게는 [Universal](https://angular.io/guide/universal)이 있습니다.
+
+대부분의 인기 있는 solution은 hydration 기법을 사용하기 때문에, solution을 선택하기 전에 사용 방법을 숙지해야 합니다.
 
 ---
 
 # References
 
-* [ECMAScript](https://www.ecma-international.org/publications/standards/Ecma-262.htm)
+* [Rendering on the Web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web)
+* [User-cectric Performance Metrics](https://developers.google.com/web/fundamentals/performance/user-centric-performance-metrics)
