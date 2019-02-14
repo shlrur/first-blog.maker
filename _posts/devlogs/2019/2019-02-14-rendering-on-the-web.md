@@ -49,10 +49,14 @@ comments:   true
 **Rendring**
 * SSR: Server-Side Rendering - Client side 혹은 범용 application을 _서버에서_ HTML로 rendering 합니다.
 * CSR: Client-Side Rendering - Browser에서 DOM을 사용해서 Application을 rendering합니다.
-* Rehydration: 
-* Prerendering: 
+* Rehydration: Server에서 rendering 한 HTML DOM 트리와 data를 client에서 재사용하도록 자바 스크립트 뷰를 "부팅"합니다.
+* Prerendering: Build시에 client-side application을 실행해서 초기 상태를 static HTML로 저장합니다.
 
 **Performance**
+* TTFB: Time to First Byte - seen as the time between clicking a link and the first bit of content coming in.
+* FP: First Paint - the first time any pixel gets becomes visible to the user.
+* FCP: First Contentful Paint - the time when requested content (article body, etc) becomes visible.
+* TTI: Time To Interactive - the time at which a page becomes interactive (events wired up, etc).
 
 ---
 
