@@ -86,7 +86,33 @@ Angular 사용자들에게는 [Universal](https://angular.io/guide/universal)이
 
 ---
 
+# Static Rendering
+
+[Static rendering](https://frontarm.com/james-k-nelson/static-vs-server-rendering/)은 build시에 일어나며, 빠른 First Paint(FP), First Contentful Paint(FCP), 그리고 Time To Interactive(TTI)를 제공합니다.(client-side JS의 양이 제한되어 있다고 가정합니다) Server rendering과는 다르게, page의 HTML을 즉석에서 생성 할 필요가 없기 때문에 일관성있게 빠른 Time To First Byte(TTFB)를 얻을 수 있습니다. 일반적으로, static rendering은 각 URL에 대한 HTML 파일을 미리 생성해 놓습니다. 지금 보고 있는 Jekyll blog 역시 Static rendering을 사용합니다. Response인 HTML을 미리 생성해 놓으면, static render는 여러 CDN에 배포함으로서 edge-caching의 이점을 가져갈 수 있습니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/1_static-rendering-tti.png" alt="static rendering TTI">
+</figure>
+
+Static rendering을 위한 solution들은 모든 모양과 크기를 제공합니다. [Gatsby](https://www.gatsbyjs.org/)같은 경우는 개발자들이 자신의 application이 build 단계를 거치지 않고, 동적으로 동작하는 것 처럼 느끼게 디자인 되어 있습니다. [Jekyll](https://jekyllrb.com/)이나 [Metalsmith](https://metalsmith.io/)같은 다른 solution들은 static 한 성질을 이용해서 좀 더 tamplate-driven의 접근 방식을 제공합니다.
+
+Static rendering의 단점 중 하나는 가능한 모든 URL에 대해 개별 HTML 파일을 생성해야 한다는 것입니다. 이는 URL이 무엇을 뜻하는지 예측하기 힘들거나 고유 페이지가 많은 site의 경우 여러 문제가 있을 수 있습니다.
+
+React 사용자의 경우 [Gatsby](https://www.gatsbyjs.org/), [Next.js static export](https://nextjs.org/learn/excel/static-html-export/), 혹은 [Navi](https://frontarm.com/navi/)가 익숙할 수 있습니다. (이 library들을 사용해서 component를 쉽게 작성할 수 있습니다) 하지만, static rendering과 prerendering 사이의 차이를 이해하는 것이 중요합니다. Static rendering page는 client-side JS를 많이 실행하지 않아도 interactive한 반면, prerendering은 First Paint(FP) 혹은 SPA의 First Contentful Paint(FCP)를 향상시킵니다. Prerendering은 page가 interactive할 수 있도록 content를 client-side에서 생성합니다.
+
+주어진 solution이 static rendering인지 prerendering인지 확실하지 않으면 다음의 test를 해볼 수 있습니다. _JavaScript를 disable로 한 후에 다시 web page를 load해보세요._ Static rendered page의 경우 JavaScript가 disable이라도 대부분의 기능이 사용 가능합니다. Prerendered page의 경우 link같은 기본 기능은 가능할지 몰라도 대부분의 page는 비활성 상태가 됩니다.
+
+
+
+---
+
 # References
 
 * [Rendering on the Web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web)
 * [User-cectric Performance Metrics](https://developers.google.com/web/fundamentals/performance/user-centric-performance-metrics)
+* [Static vs. Server Rendering](https://frontarm.com/james-k-nelson/static-vs-server-rendering/)
+* [Gatsby](https://www.gatsbyjs.org/)
+* [Jekyll](https://jekyllrb.com/)
+* [Metalsmith](https://metalsmith.io/)
+* [Next.js static export](https://nextjs.org/learn/excel/static-html-export/)
+* [Navi](https://frontarm.com/navi/)
