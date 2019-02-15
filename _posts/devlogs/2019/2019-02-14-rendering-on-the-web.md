@@ -116,6 +116,26 @@ Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하�
 
 ---
 
+# Client-Side Rendering(CSR)
+
+**Client-side rendering(CSR)은 browser에서 JavaScript를 사용해서 바로 page를 rendering하는 것을 뜻합니다. 모든 logic, data fetching, templating, 그리고 routing들이 모두 server가 아닌 client에서 처리됩니다.**
+
+Client-side rendering은 mobile환경에서 빠르기가 힘듭니다. 만약 최소한의 작업만 수행하고, [JavaScript 작업을 최소화하며](https://mobile.twitter.com/HenrikJoreteg/status/1039744716210950144), 최대한 적은 수의 [round-trip delay time(RTT)](https://en.wikipedia.org/wiki/Round-trip_delay_time)를 유지한다면 순수한 server rendering 성능과 비슷해질 수 있습니다. Client-side rendering에서 사용하는 중요한 script와 data는 [HTTP/2 Server Push](https://www.smashingmagazine.com/2017/04/guide-http2-server-push/)나 <kbd><link rel=preload></kbd>를 통해서 더 빨리 전달될 수 있으며, 이는 parser를 통해서 더 빠르게 작동합니다. [PRPL 패턴](https://developers.google.com/web/fundamentals/performance/prpl-pattern/)같은 패턴은 처음 및 다음에 실행 될 navigation들이 즉각적으로 일어나는 것 처럼 합니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/2_client-rendering-tti.png" alt="client rendering TTI">
+</figure>
+
+Client-side rendering의 가장 큰 단점은 application이 커짐에 따라 필요한 JavaScript의 양이 증가할 수 있다는 점입니다. 이는 새로운 JavaScript library, pollyfill, 그리고 third-party code를 추가할 때 특히 어려워지는데, 이 코드들은 각자 수행해야 할 것들을 위해서 경쟁할 수 있으며, 종종 page가 rendering되기 전에 처리해야 하는 것들도 있습니다. 그리고 대규모 JavaScript bundle이 필요한 Client-side rendering의 경우는 [적극적으로 code를 분할](https://developers.google.com/web/fundamentals/performance/optimizing-javascript/code-splitting/)해야 하며, JavaScript에 대해서 lazy-load도 고려해야 합니다. (_필요한 것만 서비스하라: serve only what you need, when you need it_) Interactive가 거의 없거나 아예 없는 경우, server rendering이 더 확장 가능한 solution이 될 수 있습니다.
+
+SPA(Single Page Application)을 제작하는 개발자가, 대부분의 page에서 사용하는 UI 핵심 부분을 구별할 수 있다면 [Application Shell caching](https://developers.google.com/web/updates/2015/11/app-shell) 기술을 적용할 수 있습니다. Service worker와 결합한다면, page를 반복해서 방문할 때 [perceived performance](https://en.wikipedia.org/wiki/Perceived_performance)를 획기적으로 개선할 수 있습니다.
+
+---
+
+# Combining server rendering and CSR via rehydration
+
+---
+
 # References
 
 * [Rendering on the Web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web)
@@ -129,3 +149,7 @@ Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하�
 * [Operationalizing Node.js for Server Side Rendering](https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9)
 * [memoization](https://en.wikipedia.org/wiki/Memoization)
 * [HTML caching](https://freecontent.manning.com/caching-in-react/)
+* [tight JavaScript budget](https://mobile.twitter.com/HenrikJoreteg/status/1039744716210950144)
+* [RTT](https://en.wikipedia.org/wiki/Round-trip_delay_time)
+* [aggressive code-splitting](https://developers.google.com/web/fundamentals/performance/optimizing-javascript/code-splitting/)
+* [perceived performance](https://en.wikipedia.org/wiki/Perceived_performance)
