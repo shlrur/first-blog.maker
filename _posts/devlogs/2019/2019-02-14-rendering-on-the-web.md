@@ -102,7 +102,15 @@ React 사용자의 경우 [Gatsby](https://www.gatsbyjs.org/), [Next.js static e
 
 주어진 solution이 static rendering인지 prerendering인지 확실하지 않으면 다음의 test를 해볼 수 있습니다. _JavaScript를 disable로 한 후에 다시 web page를 load해보세요._ Static rendered page의 경우 JavaScript가 disable이라도 대부분의 기능이 사용 가능합니다. Prerendered page의 경우 link같은 기본 기능은 가능할지 몰라도 대부분의 page는 비활성 상태가 됩니다.
 
+또 다른 유용한 test는 Chrome DevTools를 사용하여 네트워크를 느리게 하고 page가 interactive되기 전에 얼마나 많은 JavsScript를 download하는지 보는 것입니다. Prerendering의 경우 interactive를 위해 더 많은 JavaScript가 필요하며, JavaScript는 static rendering에서 사용하는 Progressive Enhancement 접근 방식보다 더 복잡한 경향이 있습니다.
 
+---
+
+# Server Rendering vs Static Rendering
+
+Server rendering은 비장의 무기(silver bullet)가 아닙니다. (Server rendering만으로 모든걸 해결할 수 없다는 뜻입니다) 동적인 특성으로 인해 [상당한 compute overhead](https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9)가 발생할 수 있기 때문입니다. 많은 server rendering solution은 일찍 flush하지 않으며 TTFB를 지연시키거나 전송되는 data를 2배로 늘릴 수도 있습니다. (ex: client에서 JS로 인한 inlined state) React의 renderToString()은 synchronous이고 single-thread이기 때문에 느려질 수 있습니다. Server rendering을 **올바르게** 사용하기 위해서는 component caching, memory 사용량 관리, [memoization](https://en.wikipedia.org/wiki/Memoization) 기법 적용, 등등에 대한 solution을 찾거나 구축해야 합니다. 일반적으로 같은 application을 여러번 processing/rebuilding 하게 됩니다. (client에서 한번, server에서 한번...) Server rendering으로 인해 무언가를 더 빨리 보여줄 수 있다고 해서 개발자가 할 일이 줄어들지는 않습니다...ㅠ
+
+Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하지만, static rendering으로 생성된 contents를 제공하는 것 보다 느릴 수 있습니다. 
 
 ---
 
@@ -116,3 +124,5 @@ React 사용자의 경우 [Gatsby](https://www.gatsbyjs.org/), [Next.js static e
 * [Metalsmith](https://metalsmith.io/)
 * [Next.js static export](https://nextjs.org/learn/excel/static-html-export/)
 * [Navi](https://frontarm.com/navi/)
+* [Operationalizing Node.js for Server Side Rendering](https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9)
+* [memoization](https://en.wikipedia.org/wiki/Memoization)
