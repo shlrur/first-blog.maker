@@ -110,7 +110,9 @@ React 사용자의 경우 [Gatsby](https://www.gatsbyjs.org/), [Next.js static e
 
 Server rendering은 비장의 무기(silver bullet)가 아닙니다. (Server rendering만으로 모든걸 해결할 수 없다는 뜻입니다) 동적인 특성으로 인해 [상당한 compute overhead](https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9)가 발생할 수 있기 때문입니다. 많은 server rendering solution은 일찍 flush하지 않으며 TTFB를 지연시키거나 전송되는 data를 2배로 늘릴 수도 있습니다. (ex: client에서 JS로 인한 inlined state) React의 renderToString()은 synchronous이고 single-thread이기 때문에 느려질 수 있습니다. Server rendering을 **올바르게** 사용하기 위해서는 component caching, memory 사용량 관리, [memoization](https://en.wikipedia.org/wiki/Memoization) 기법 적용, 등등에 대한 solution을 찾거나 구축해야 합니다. 일반적으로 같은 application을 여러번 processing/rebuilding 하게 됩니다. (client에서 한번, server에서 한번...) Server rendering으로 인해 무언가를 더 빨리 보여줄 수 있다고 해서 개발자가 할 일이 줄어들지는 않습니다...ㅠ
 
-Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하지만, static rendering으로 생성된 contents를 제공하는 것 보다 느릴 수 있습니다. 
+Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하지만, static rendering으로 생성된 contents를 제공하는 것 보다 느릴 수 있습니다. 발품을 좀 더 팔수있다면, server rendering + [HTML caching](https://freecontent.manning.com/caching-in-react/) 으로 server render time을 확 줄일 수 있습니다. Server rendering의 장점은 static rendering보다 좀 더 "live"한 data를 사용함으로써 요청에 대한 좀 더 완벽한 응답을 할 수 있다는 점입니다. Static rendering에 적합하지 않은 구체적인 예로, 개인화(personalization)가 필요한 page를 들 수 있습니다.
+
+또한, Server rendering은 [PWA](https://developers.google.com/web/progressive-web-apps/)를 구축할 때 재미있는 질문을 할 수 있습니다. 전체 페이지 [service worker](https://developers.google.com/web/fundamentals/primers/service-workers/) caching을 하는게 좋을까요, 개별 content를 server rendering 하는 것이 좋을까요?
 
 ---
 
@@ -126,3 +128,4 @@ Server rendering은 각 URL에 대한 HTML을 on-demand 방식으로 생성하�
 * [Navi](https://frontarm.com/navi/)
 * [Operationalizing Node.js for Server Side Rendering](https://medium.com/airbnb-engineering/operationalizing-node-js-for-server-side-rendering-c5ba718acfc9)
 * [memoization](https://en.wikipedia.org/wiki/Memoization)
+* [HTML caching](https://freecontent.manning.com/caching-in-react/)
