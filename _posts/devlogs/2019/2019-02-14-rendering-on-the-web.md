@@ -160,6 +160,24 @@ Rehydration을 사용하는 SSR에도 희망은 있습니다. 단기적으로는
 
 ---
 
+# Streaming server rendering and Progressive Rehydration
+
+Server rendering은 지난 몇 년간 많은 발전을 해왔습니다.
+
+[Streaming server rendering](https://zeit.co/blog/streaming-server-rendering-at-spectrum)을 사용하면 HTML을 chunck로 보내면서 browser가 점진적으로 rendering 할 수 있습니다. 이런 방식을 사용하면 markup이 사용자에게 더 빨리 도착하기 때문에 더 빠른 First Paint(FP)와 First Contentful Paint(FCP)를 제공할 수 있습니다. React에서는 [renderToNodeStream()](https://reactjs.org/docs/react-dom-server.html#rendertonodestream)(renderToString()은 synchronous)을 사용해서 stream을 asynchronous로 처리하기 때문에 배압(backpressure)이 잘 처리됨을 의미합니다.
+
+점진적인(progressive) rehydration 역시 눈여겨볼 가치가 있으며, [React가 계속 연구](https://github.com/facebook/react/pull/14717)하고 있는 것입니다. 점진적인 rehydration은, 현재 일반적인 접근방법인 전체 application을 한번에 모두 초기화하기 보다는, 시간에 따라 server render로 application의 개별 부분을 "booted up" 합니다. 이는 우선순위가 낮은 page의 client-side upgrade를 미룸에 따라 main thread가 block되지 않기 때문에, 우선순위가 높은 page의 interactive를 가져오는데 필요한 JavaScript의 양을 줄이는데 도움을 줍니다. _한마디로 당장 필요없는 부분보다 필요한 부분의 interactive부터 가능하게 한다는 뜻입니다._ 그리고, SSR Rehydration의 가장 일반적인 단점인 server-rendered DOM tree가 부서졌다가 바로 재건되는 것을 피하는데 도움을 줍니다. 가장 큰 이유는 초기의 synchronous한 client-side rendering이 아직 준비되지 않은 data가 필요한데, 아마 Promise를 기다리기 때문일 것입니다.
+
+## Partial Rehydration
+
+## Trisomorphic Rendering
+
+# SEO Considerations
+
+# Wrapping up...
+
+---
+
 # References
 
 * [Rendering on the Web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web)
@@ -178,3 +196,5 @@ Rehydration을 사용하는 SSR에도 희망은 있습니다. 단기적으로는
 * [aggressive code-splitting](https://developers.google.com/web/fundamentals/performance/optimizing-javascript/code-splitting/)
 * [perceived performance](https://en.wikipedia.org/wiki/Perceived_performance)
 * [(re)hydration technique](https://docs.electrode.io/guides/general/server-side-data-hydration)
+* [Streaming server rendering](https://zeit.co/blog/streaming-server-rendering-at-spectrum)
+* [React - Partial Hydration #14717](https://github.com/facebook/react/pull/14717)
