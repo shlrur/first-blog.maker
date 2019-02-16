@@ -134,6 +134,30 @@ SPA(Single Page Application)을 제작하는 개발자가, 대부분의 page에�
 
 # Combining server rendering and CSR via rehydration
 
+Universal Rendering 혹은 간단히 "SSR"이라고 하는 접근 방식은 Client-Side Rendering과 Server Rendering간의 trade-off를 조절해서 두 방식 모두 사용합니다. Full page load 혹은 reload같은 navigation 요청은 server가 application을 HTML로 rendering하는 방식으로 처리합니다. 그리고 rendering에 사용되는 data와 JavaScript는 resulting document에 포함되어 처리됩니다. 신중하게 구현한다면, Server Rendering과 같이 빠른 First Contentful Paint(FCP)를 얻을 수 있으며, 그 후 [(re)hydration](https://docs.electrode.io/guides/general/server-side-data-hydration)이라는 테크닉을 사용해서 client에서 다시 rendering 하여 "pick up"할 수 있습니다. 이는 새로운 해결책이지만, 상당한 성능상의 단점이 있을 수 있습니다.
+
+Rehydration을 사용하는 SSR의 가장 큰 단점은 Time To Interactive(TTI)에 상당히 부정적인 영향을 미칠 수 있다는 것입니다. First Paint(FP)가 개선되더라도 말이죠... SSR의 페이지는 종종 로딩도 되고 interactive한 것처럼 보이지만, 사실은 client-side JS가 실행되고 event handler가 붙을 때 까지 실제로 입력등에 반응할 수 없습니다. Mobile에서는 수 초에서 수 분까지 걸릴 수 있습니다.
+
+아마 여러분들도 이런 경험이 있을겁니다. 어떤 page가 로드된 것처럼 보이지만, 일정 기간 동안 click이나 touch가 작동하지 않는 경우 말이죠. "왜 아무것도 안되지? 왜 스크롤을 할 수 없지???" 같은 경우 말이죠.
+
+## A Rehydration Problem: One App for the Price of Two
+
+Rehydration 문제는 가끔 JS때문에 interactive가 지연되는 것보다 더 문제가 될 수 있습니다. 최근의 SSR solution들은 일반적으로 UI의 data dependency들로부터 document로의 응답을 script tag로 직렬화 합니다. Server가 HTML을 rendering하는데 사용한 모든 data를 다시 요청 할 필요없이 client-side JavaScript가 server의 종료지점을 정확하게 "pick-up" 할 수 있도록 말이죠.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/3_html.png" alt="html">
+</figure>
+
+위의 사진과 같이, server는 navigation의 request에 대한 application UI의 description을 반환합니다. 이 UI를 작성하는데 필요한 data도 함께 말이죠. UI의 진정한 interactive는 bundle.js가 완벽히 load된 후에나 가능해집니다.
+
+실제 website에서 수집된 performance 지표만 보면 SSR rehydration을 사용하지 않아야 할 것처럼 보입니다. 궁극적으로 그 이유는 UX(user experience)때문인데, user들이 쉽게 ["불쾌한 계곡"](https://en.wikipedia.org/wiki/Uncanny_valley)에 남겨질 수 있기 때문입니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/4_rehydration-tti.png" alt="rehydration-tti">
+</figure>
+
+Rehydration을 사용하는 SSR에도 희망은 있습니다. 단기적으로는, 캐시성이 높은 content에만 SSR을 사용하면 TTFB delay를 줄여서 prerendering과 유사한 결과를 얻을 수 있습니다. 점진적으로, 계속해서, 혹은 부분적으로 rehydrating을 한다면 이 기술을 미래에 더 실용적으로 만들 수 있을 것입니다.
+
 ---
 
 # References
@@ -153,3 +177,4 @@ SPA(Single Page Application)을 제작하는 개발자가, 대부분의 page에�
 * [RTT](https://en.wikipedia.org/wiki/Round-trip_delay_time)
 * [aggressive code-splitting](https://developers.google.com/web/fundamentals/performance/optimizing-javascript/code-splitting/)
 * [perceived performance](https://en.wikipedia.org/wiki/Perceived_performance)
+* [(re)hydration technique](https://docs.electrode.io/guides/general/server-side-data-hydration)
