@@ -36,11 +36,11 @@ comments:   true
 
 # Motivation
 
-우리는 가끔 개발자로서, application의 전체적인 구조에 영향을 미치는 사항에 대한 결정을 해야 할 때가 있습니다. 웹 개발자에게는 **logic과 rendering을 application의 어디에서 구현할 것인지에 대한 결정**이 바로 그런 것입니다. 웹 사이트를 만드는데 수 많은 방법이 있기 때문에, 어려운 결정이라고 할 수 있습니다.
+우리는 가끔 개발자로서, application의 전체적인 구조에 영향을 미치는 사항에 대해 결정을 해야 할 때가 있습니다. 웹 개발자에게는 **logic과 rendering을 application의 어디에서 구현할 것인지에 대한 결정**이 바로 그런 것입니다. 웹 사이트를 만드는데 수많은 방법이 있기 때문에, 어려운 결정이라고 할 수 있습니다.
 
-여기서 우리는 지난 몇년간 Chrome을 통해서 큰 사이트들의 방법을 알 수 있었습니다. 전반적으로, **full rehydration** 접근법을 통해서 server rendering 혹은 static rendering을 고려할 것을 권장하고 있습니다.
+여기서 우리는 지난 몇 년간 Chrome을 통해서 큰 사이트들의 방법을 알 수 있었습니다. 전반적으로, **full rehydration** 접근법을 통해서 server rendering 혹은 static rendering을 고려할 것을 권장하고 있습니다.
 
-이러한 결정을 내릴 때 고려중인 여러 architecture를 더 잘 이해하려면 각 방식에 대해서 확실히 이해하고 일관된 용어를 사용해야 합니다. 이러한 접근방식간의 차이를 잘 이해하면, 각 방식들의 performance적인 측면에서 trade-off를 더 잘 이해할 수 있습니다.
+이러한 결정을 내릴 때 고려 중인 여러 architecture를 더 잘 이해하려면 각 방식에 대해서 확실히 이해하고 일관된 용어를 사용해야 합니다. 이러한 접근방식 간의 차이를 잘 이해하면, 각 방식의 performance 적인 측면에서 trade-off를 더 잘 이해할 수 있습니다.
 
 ---
 
@@ -48,15 +48,15 @@ comments:   true
 
 **Rendring**
 * SSR: Server-Side Rendering - Client side 혹은 범용 application을 _서버에서_ HTML로 rendering 합니다.
-* CSR: Client-Side Rendering - Browser에서 DOM을 사용해서 Application을 rendering합니다.
-* Rehydration: Server에서 rendering 한 HTML DOM 트리와 data를 client에서 재사용하도록 자바 스크립트 뷰를 "부팅"합니다.
-* Prerendering: Build시에 client-side application을 실행해서 초기 상태를 static HTML로 저장합니다.
+* CSR: Client-Side Rendering - Browser에서 DOM을 사용해서 Application을 rendering 합니다.
+* Rehydration: Server에서 rendering 한 HTML DOM 트리와 data를 client에서 재사용하도록 JavaScript 뷰를 "부팅"합니다.
+* Prerendering: Build 시에 client-side application을 실행해서 초기 상태를 static HTML로 저장합니다.
 
 **Performance**
 * TTFB: Time to First Byte - 링크를 클릭했을 때와 해당 링크 contents의 첫 번째 bit가 들어왔을 때 사이의 시간.
 * FP: First Paint - 사용자가 첫 번째 pixel을 볼 수 있는 시간.
-* FCP: First Contentful Paint - Article body같은 요청한 내용이 보이는 시간.
-* TTI: Time To Interactive - Page가 interactive(event 연결 등)하게 된 시간.
+* FCP: First Contentful Paint - Article body 같은 요청한 내용이 보이는 시간.
+* TTI: Time To Interactive - Page가 interactive(event 연결 등) 하게 된 시간.
 
 ---
 
@@ -170,11 +170,37 @@ Server rendering은 지난 몇 년간 많은 발전을 해왔습니다.
 
 ## Partial Rehydration
 
+Partial rehydration은 구현하기 어렵다고 입증되었습니다. Partial rehydration은 progressive rehydration의 개념을 확장한 것인데, progressive rehydration에서는 component / view / tree 같이 점진적으로 rehydrate되어햐는 개별적인 부분을 분석하고 interactive가 거의 없거나 아예 없는 부분을 확인합니다. 이러한 static한 부분 각각에 대해 해당 JavaScript 코드는 비활성 참조 및 장식 기능으로 변환되어 클라이언트 측 foot-print를 거의 0으로 줄입니다. Partial hydration은 그 자체의 이슈와 타협을 동반하고 있습니다. Caching에 대한 몇 가지 흥미로운 문제를 가지며, client-side navigating은 full page load 없이도 application의 필요 없는 부분에 대해서는 server rendering을 사용할 수 있다는 것을 의미합니다.
+
 ## Trisomorphic Rendering
+
+만약 [service worker](https://developers.google.com/web/fundamentals/primers/service-workers/)를 사용할 수 있다면, **trisomorphic** rendering에도 관심을 가져볼 수 있습니다. **Trisomorphic** rendering은 초기화 및 JS를 사용하지 않는 navigation에서 streaming server rendering을 사용할 수 있으며, service worker가 설치된 후에 navigation을 위해 HTML rendering을 할 수 있는 기술입니다. 이 기술은 cache 된 component와 template들을 최신 상태로 유지할 수 있으며, 동일 session에서 새로운 view를 생성하기 위한 SPA style의 navigation이 가능합니다. 이 접근법은 server, client side, 그리고 service worker(_원문에서는 server worker라고 되어있는데, 오타라고 판단하고 service worker라 적음_) 사이에 동일한 template 및 routing code를 공유할 수 있을때 가장 효과적입니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/5_trisomorphic.png" alt="trisomorphic">
+</figure>
+
+---
 
 # SEO Considerations
 
+개발 팀들은 웹 개발에서 rendering 전략을 선택할 때 SEO를 고려합니다. 검색엔진에서 자신들의 웹 페이지가 검색되어야 하니까요. 이때, Server-rendering을 선택하는 이유는, crawler가 쉽게 해석할 수 있는 완전해 보이는("complete looking") 결과물을 전달하기 위해서입니다. Crawler가 JavaScript를 인식할 수는 있지만, JavaScript가 어떻게 rendering 하는지 모르는 경우가 있습니다. Crawler 작업중에 제대로 client-side rendering을 할 수도 있지만, 가끔 추가적인 testing과 작업을 하지 않으면 제대로 rendering을 하지 못할 수도 있습니다. 만약 당신의 application의 구조가 주로 client-side의 JavaScript로 구동되더라도, 최근의 [dynamic rendering](https://developers.google.com/search/docs/guides/dynamic-rendering)을 사용하도록 고려할 수 있습니다.
+
+자신의 web page가 어떻게 보이는지 알고싶은 경우, [google의 모바일 친화성 테스트](https://search.google.com/test/mobile-friendly)를 사용할 수 있습니다. 이 test를 통해서 자신의 page가 Google crawler에 보이는 방식, 일련의 HTML content, 그리고 rendering중 발생한 오류 등을 미리 볼 수 있습니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/6_mobile-friendly-test.png" alt="mobile friendly test">
+</figure>
+
+---
+
 # Wrapping up...
+
+Project의 rendering 방식을 결정할 때는 당신의 bottleneck이 뭔지 알고 이해해야 합니다. Static rendering 또는 server rendering으로 그중 90%를 얻을 수 있는지 고려해보십시오. Interactive를 위해서 HTML을 최소한의 JS와 함께 전송하는 방식은 완전 okay입니다. 아래에 server에서 client까지의 spectrum을 보여주는 infographic이 있습니다.
+
+<figure class="align-center">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/rendering-on-the-web/7_infographic.png" alt="infographic">
+</figure>
 
 ---
 
@@ -198,3 +224,8 @@ Server rendering은 지난 몇 년간 많은 발전을 해왔습니다.
 * [(re)hydration technique](https://docs.electrode.io/guides/general/server-side-data-hydration)
 * [Streaming server rendering](https://zeit.co/blog/streaming-server-rendering-at-spectrum)
 * [React - Partial Hydration #14717](https://github.com/facebook/react/pull/14717)
+* [service worker](https://developers.google.com/web/fundamentals/primers/service-workers/)
+* [How search works](https://web.dev/discoverable/how-search-works)
+* [Understand rendering on Google Search](https://developers.google.com/search/docs/guides/rendering)
+* [Dynamic rendering](https://developers.google.com/search/docs/guides/dynamic-rendering)
+* [google's Mobile Friendly Test](https://search.google.com/test/mobile-friendly)
